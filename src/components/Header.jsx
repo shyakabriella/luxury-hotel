@@ -4,13 +4,13 @@ const LOGO_SRC = "/losgo.png";
 const GROUP_MEETING_URL = "https://www.groupmeeting.ashbhub.com/";
 
 const topNavLinks = [
-  { label: "Groups & Meetings", href: GROUP_MEETING_URL },
+  { label: "Conferences", href: GROUP_MEETING_URL },
   { label: "Weddings", href: GROUP_MEETING_URL },
   { label: "Accommodations", href: "/accommodations" },
 ];
 
 const menuLinks = [
-  { label: "Groups & Meetings", href: GROUP_MEETING_URL },
+  { label: "Conferences", href: GROUP_MEETING_URL },
   { label: "Weddings", href: GROUP_MEETING_URL },
   { label: "Accommodations", href: "/accommodations" },
   { label: "Outdoor Education", href: "/outdoor-education" },
