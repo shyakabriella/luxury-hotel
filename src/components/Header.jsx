@@ -94,6 +94,21 @@ export default function Header() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
+  useEffect(() => {
+    const handleOpenFromBottomBar = () => {
+      setMenuOpen(true);
+    };
+
+    window.addEventListener("open-mobile-bottom-menu", handleOpenFromBottomBar);
+
+    return () => {
+      window.removeEventListener(
+        "open-mobile-bottom-menu",
+        handleOpenFromBottomBar
+      );
+    };
+  }, []);
+
   return (
     <>
       <header
@@ -132,9 +147,12 @@ export default function Header() {
                   Phone: +250 780 443 787
                 </span>
 
-                <button className="mt-3 min-w-[180px] bg-white px-8 py-3 text-[15px] font-semibold uppercase tracking-wide text-[#9b8957] transition hover:bg-[#f7f2eb]">
+                <a
+                  href="https://www.luxuryweb.ashbhub.com/"
+                  className="mt-3 inline-flex min-w-[180px] items-center justify-center bg-white px-8 py-3 text-[15px] font-semibold uppercase tracking-wide text-[#9b8957] transition hover:bg-[#f7f2eb]"
+                >
                   Reserve
-                </button>
+                </a>
               </div>
 
               <button
@@ -153,27 +171,8 @@ export default function Header() {
               </button>
             </div>
 
-            {/* Mobile menu button */}
-            <div className="flex items-center gap-3 md:hidden">
-              <button className="bg-white px-4 py-2 text-[12px] font-semibold uppercase tracking-wide text-[#9b8957]">
-                Reserve
-              </button>
-
-              <button
-                onClick={() => setMenuOpen(true)}
-                className="flex flex-col items-center text-white"
-                aria-label="Open menu"
-              >
-                <span className="mb-2 flex flex-col gap-[5px]">
-                  <span className="block h-[2px] w-8 bg-[#c5ad86]" />
-                  <span className="block h-[2px] w-8 bg-[#c5ad86]" />
-                  <span className="block h-[2px] w-8 bg-[#c5ad86]" />
-                </span>
-                <span className="text-[11px] uppercase tracking-widest">
-                  Menu
-                </span>
-              </button>
-            </div>
+            {/* Mobile spacer only */}
+            <div className="w-[40px] md:hidden" />
           </div>
         </div>
       </header>
