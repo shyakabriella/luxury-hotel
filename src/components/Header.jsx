@@ -32,12 +32,12 @@ function HeaderLogo({ isScrolled = false, menuVersion = false }) {
       <img
         src={LOGO_SRC}
         alt="Luxury Hotel Logo"
-        className={`w-auto object-contain transition-all duration-300 drop-shadow-[0_6px_18px_rgba(0,0,0,0.55)] ${
+        className={`w-auto object-contain transition-all duration-300 drop-shadow-[0_8px_22px_rgba(0,0,0,0.55)] ${
           menuVersion
-            ? "h-[52px] max-w-[220px] sm:h-[58px] md:h-[70px]"
+            ? "h-[62px] max-w-[260px] sm:h-[72px] md:h-[70px]"
             : isScrolled
-            ? "h-[52px] max-w-[220px] sm:h-[58px] md:h-[72px] lg:h-[82px]"
-            : "h-[58px] max-w-[240px] sm:h-[64px] md:h-[84px] lg:h-[96px]"
+            ? "h-[92px] max-w-[320px] md:h-[72px] lg:h-[82px]"
+            : "h-[116px] max-w-[380px] md:h-[84px] lg:h-[96px]"
         }`}
       />
     </a>
@@ -102,7 +102,7 @@ export default function Header() {
   return (
     <>
       <header
-        className={`fixed left-0 right-0 top-[118px] md:top-[76px] z-[55] transition-all duration-300 ${
+        className={`fixed left-0 right-0 top-[92px] md:top-[76px] z-[55] transition-all duration-300 ${
           isScrolled ? "bg-[#1d3335] shadow-lg" : "bg-transparent"
         }`}
       >
@@ -110,8 +110,8 @@ export default function Header() {
           <div
             className={`flex items-center justify-center md:justify-between transition-all duration-300 ${
               isScrolled
-                ? "min-h-[84px] md:min-h-[104px]"
-                : "min-h-[96px] md:min-h-[144px]"
+                ? "min-h-[116px] md:min-h-[104px]"
+                : "min-h-[146px] md:min-h-[144px]"
             }`}
           >
             {/* Logo */}
