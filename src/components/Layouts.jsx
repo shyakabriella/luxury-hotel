@@ -68,6 +68,20 @@ function MobileBottomBar() {
   );
 }
 
+function SideContactTab() {
+  return (
+    <a
+      href="/contact"
+      className="fixed left-0 top-1/2 z-[75] -translate-y-1/2 rounded-r-md border border-black/20 bg-white px-2 py-4 text-[#555] shadow-md transition hover:bg-[#f7f5f2]"
+      aria-label="Contact Us"
+    >
+      <span className="[writing-mode:vertical-rl] rotate-180 text-[12px] font-medium tracking-[0.08em] md:text-[13px]">
+        Contact Us
+      </span>
+    </a>
+  );
+}
+
 export default function Layouts() {
   const location = useLocation();
   const isHome = location.pathname === "/";
@@ -76,10 +90,11 @@ export default function Layouts() {
     <div className="min-h-screen bg-white">
       <TopNav />
       <Header />
+      <SideContactTab />
 
       <main
         className={`${
-          isHome ? "pt-[92px] md:pt-[76px]" : "pt-[224px] md:pt-[172px]"
+          isHome ? "pt-[56px] md:pt-[76px]" : "pt-[206px] md:pt-[172px]"
         } pb-[74px] md:pb-0`}
       >
         <Outlet />

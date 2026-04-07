@@ -32,12 +32,12 @@ function HeaderLogo({ isScrolled = false, menuVersion = false }) {
       <img
         src={LOGO_SRC}
         alt="Luxury Hotel Logo"
-        className={`w-auto object-contain transition-all duration-300 drop-shadow-[0_8px_22px_rgba(0,0,0,0.55)] ${
+        className={`w-auto object-contain transition-all duration-300 drop-shadow-[0_8px_24px_rgba(0,0,0,0.55)] ${
           menuVersion
-            ? "h-[62px] max-w-[260px] sm:h-[72px] md:h-[70px]"
+            ? "h-[62px] max-w-[250px] sm:h-[72px] md:h-[72px]"
             : isScrolled
-            ? "h-[92px] max-w-[320px] md:h-[72px] lg:h-[82px]"
-            : "h-[116px] max-w-[380px] md:h-[84px] lg:h-[96px]"
+            ? "h-[118px] max-w-[420px] md:h-[72px] lg:h-[82px]"
+            : "h-[150px] max-w-[520px] md:h-[84px] lg:h-[96px]"
         }`}
       />
     </a>
@@ -50,7 +50,7 @@ export default function Header() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
+      setIsScrolled(window.scrollY > 18);
     };
 
     handleScroll();
@@ -102,16 +102,16 @@ export default function Header() {
   return (
     <>
       <header
-        className={`fixed left-0 right-0 top-[92px] md:top-[76px] z-[55] transition-all duration-300 ${
-          isScrolled ? "bg-[#1d3335] shadow-lg" : "bg-transparent"
-        }`}
+        className={`fixed left-0 right-0 z-[55] transition-all duration-300 ${
+          isScrolled ? "top-0 md:top-[76px]" : "top-[56px] md:top-[76px]"
+        } ${isScrolled ? "bg-[#1d3335] shadow-lg" : "bg-transparent"}`}
       >
         <div className="mx-auto max-w-[1600px] px-4 md:px-8 lg:px-12">
           <div
             className={`flex items-center justify-center md:justify-between transition-all duration-300 ${
               isScrolled
-                ? "min-h-[116px] md:min-h-[104px]"
-                : "min-h-[146px] md:min-h-[144px]"
+                ? "min-h-[124px] md:min-h-[104px]"
+                : "min-h-[170px] md:min-h-[144px]"
             }`}
           >
             {/* Logo */}
