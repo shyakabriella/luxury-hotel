@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from "react";
 
+const LOGO_SRC = "/logo.png"; // change here only if your file is /losgo.png
+const GROUP_MEETING_URL = "https://www.groupmeeting.ashbhub.com/";
+
 const topNavLinks = [
-  { label: "Groups & Meetings", href: "/groups-meetings" },
-  { label: "Weddings", href: "/weddings" },
+  { label: "Groups & Meetings", href: GROUP_MEETING_URL },
+  { label: "Weddings", href: GROUP_MEETING_URL },
   { label: "Accommodations", href: "/accommodations" },
 ];
 
 const menuLinks = [
-  { label: "Groups & Meetings", href: "/groups-meetings" },
-  { label: "Weddings", href: "/weddings" },
+  { label: "Groups & Meetings", href: GROUP_MEETING_URL },
+  { label: "Weddings", href: GROUP_MEETING_URL },
   { label: "Accommodations", href: "/accommodations" },
   { label: "Outdoor Education", href: "/outdoor-education" },
   { label: "Activities", href: "/activities" },
@@ -22,6 +25,34 @@ const bottomLinks = [
   { label: "Careers", href: "/careers" },
   { label: "Summer Camp", href: "/summer-camp" },
 ];
+
+function HeaderLogo({ isScrolled = false, menuVersion = false }) {
+  return (
+    <a href="/" className="shrink-0">
+      <div
+        className={`inline-flex items-center transition-all duration-300 ${
+          menuVersion
+            ? "rounded-md bg-transparent px-0 py-0"
+            : isScrolled
+            ? "rounded-md bg-transparent px-0 py-0"
+            : "rounded-md bg-black/25 px-3 py-2 backdrop-blur-[2px] md:px-4 md:py-3"
+        }`}
+      >
+        <img
+          src={LOGO_SRC}
+          alt="Luxury Hotel Logo"
+          className={`w-auto object-contain transition-all duration-300 drop-shadow-[0_6px_18px_rgba(0,0,0,0.6)] ${
+            menuVersion
+              ? "h-[64px] max-w-[260px] sm:h-[72px] md:h-[82px]"
+              : isScrolled
+              ? "h-[64px] max-w-[220px] sm:h-[70px] md:h-[78px] md:max-w-[280px] lg:h-[86px] lg:max-w-[320px]"
+              : "h-[78px] max-w-[240px] sm:h-[88px] md:h-[100px] md:max-w-[320px] lg:h-[112px] lg:max-w-[380px]"
+          }`}
+        />
+      </div>
+    </a>
+  );
+}
 
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -79,25 +110,7 @@ export default function Header() {
             }`}
           >
             {/* Logo */}
-            <a href="/" className="shrink-0">
-              <div
-                className={`inline-flex items-center rounded-md transition-all duration-300 ${
-                  isScrolled
-                    ? "bg-transparent px-0 py-0"
-                    : "bg-black/25 backdrop-blur-[2px] px-3 py-2 md:px-4 md:py-3"
-                }`}
-              >
-                <img
-                  src="/losgo.png"
-                  alt="Luxury Hotel Logo"
-                  className={`w-auto object-contain transition-all duration-300 drop-shadow-[0_6px_18px_rgba(0,0,0,0.6)] ${
-                    isScrolled
-                      ? "h-[64px] sm:h-[70px] md:h-[78px] lg:h-[86px] max-w-[220px] md:max-w-[280px] lg:max-w-[320px]"
-                      : "h-[78px] sm:h-[88px] md:h-[100px] lg:h-[112px] max-w-[240px] md:max-w-[320px] lg:max-w-[380px]"
-                  }`}
-                />
-              </div>
-            </a>
+            <HeaderLogo isScrolled={isScrolled} />
 
             {/* Center desktop nav */}
             <nav className="hidden lg:flex items-center gap-8 xl:gap-12">
@@ -188,7 +201,6 @@ export default function Header() {
             menuOpen ? "translate-x-0" : "translate-x-full"
           }`}
         >
-          {/* Background layers */}
           <div
             className="absolute inset-0"
             style={{
@@ -201,15 +213,8 @@ export default function Header() {
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(9,93,96,0.18),transparent_55%)]" />
 
           <div className="relative flex h-full flex-col px-6 py-8 sm:px-10 md:px-14 lg:px-20">
-            {/* Top close button */}
             <div className="flex items-center justify-between">
-              <a href="/" className="shrink-0">
-                <img
-                  src="/losgo.png"
-                  alt="Luxury Hotel Logo"
-                  className="h-[64px] w-auto max-w-[260px] object-contain drop-shadow-[0_6px_18px_rgba(0,0,0,0.55)] sm:h-[72px] md:h-[82px]"
-                />
-              </a>
+              <HeaderLogo menuVersion />
 
               <button
                 onClick={() => setMenuOpen(false)}
@@ -222,7 +227,6 @@ export default function Header() {
               </button>
             </div>
 
-            {/* Main menu */}
             <div className="flex flex-1 items-center justify-center">
               <nav className="w-full max-w-[620px]">
                 <ul className="space-y-4 text-center md:space-y-5">
@@ -241,7 +245,6 @@ export default function Header() {
               </nav>
             </div>
 
-            {/* Bottom links */}
             <div className="pb-2">
               <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-white">
                 {bottomLinks.map((item) => (
