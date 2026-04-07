@@ -79,7 +79,7 @@ export default function Layouts() {
 
       <main
         className={`${
-          isHome ? "pt-[72px] md:pt-[76px]" : "pt-[160px] md:pt-[172px]"
+          isHome ? "pt-[118px] md:pt-[76px]" : "pt-[230px] md:pt-[172px]"
         } pb-[74px] md:pb-0`}
       >
         <Outlet />

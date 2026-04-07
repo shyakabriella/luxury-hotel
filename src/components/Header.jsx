@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-const LOGO_SRC = "/logo.png"; // change here only if your file is /losgo.png
+const LOGO_SRC = "/losgo.png";
 const GROUP_MEETING_URL = "https://www.groupmeeting.ashbhub.com/";
 
 const topNavLinks = [
@@ -29,27 +29,17 @@ const bottomLinks = [
 function HeaderLogo({ isScrolled = false, menuVersion = false }) {
   return (
     <a href="/" className="shrink-0">
-      <div
-        className={`inline-flex items-center transition-all duration-300 ${
+      <img
+        src={LOGO_SRC}
+        alt="Luxury Hotel Logo"
+        className={`w-auto object-contain transition-all duration-300 drop-shadow-[0_6px_18px_rgba(0,0,0,0.55)] ${
           menuVersion
-            ? "rounded-md bg-transparent px-0 py-0"
+            ? "h-[52px] max-w-[220px] sm:h-[58px] md:h-[70px]"
             : isScrolled
-            ? "rounded-md bg-transparent px-0 py-0"
-            : "rounded-md bg-black/25 px-3 py-2 backdrop-blur-[2px] md:px-4 md:py-3"
+            ? "h-[52px] max-w-[220px] sm:h-[58px] md:h-[72px] lg:h-[82px]"
+            : "h-[58px] max-w-[240px] sm:h-[64px] md:h-[84px] lg:h-[96px]"
         }`}
-      >
-        <img
-          src={LOGO_SRC}
-          alt="Luxury Hotel Logo"
-          className={`w-auto object-contain transition-all duration-300 drop-shadow-[0_6px_18px_rgba(0,0,0,0.6)] ${
-            menuVersion
-              ? "h-[64px] max-w-[260px] sm:h-[72px] md:h-[82px]"
-              : isScrolled
-              ? "h-[64px] max-w-[220px] sm:h-[70px] md:h-[78px] md:max-w-[280px] lg:h-[86px] lg:max-w-[320px]"
-              : "h-[78px] max-w-[240px] sm:h-[88px] md:h-[100px] md:max-w-[320px] lg:h-[112px] lg:max-w-[380px]"
-          }`}
-        />
-      </div>
+      />
     </a>
   );
 }
@@ -112,20 +102,22 @@ export default function Header() {
   return (
     <>
       <header
-        className={`fixed left-0 right-0 top-[72px] md:top-[76px] z-[55] transition-all duration-300 ${
+        className={`fixed left-0 right-0 top-[118px] md:top-[76px] z-[55] transition-all duration-300 ${
           isScrolled ? "bg-[#1d3335] shadow-lg" : "bg-transparent"
         }`}
       >
         <div className="mx-auto max-w-[1600px] px-4 md:px-8 lg:px-12">
           <div
-            className={`flex items-center justify-between gap-4 transition-all duration-300 ${
+            className={`flex items-center justify-center md:justify-between transition-all duration-300 ${
               isScrolled
-                ? "min-h-[96px] md:min-h-[104px]"
-                : "min-h-[118px] md:min-h-[144px]"
+                ? "min-h-[84px] md:min-h-[104px]"
+                : "min-h-[96px] md:min-h-[144px]"
             }`}
           >
             {/* Logo */}
-            <HeaderLogo isScrolled={isScrolled} />
+            <div className="flex justify-center md:block">
+              <HeaderLogo isScrolled={isScrolled} />
+            </div>
 
             {/* Center desktop nav */}
             <nav className="hidden lg:flex items-center gap-8 xl:gap-12">
@@ -170,9 +162,6 @@ export default function Header() {
                 </span>
               </button>
             </div>
-
-            {/* Mobile spacer only */}
-            <div className="w-[40px] md:hidden" />
           </div>
         </div>
       </header>
@@ -185,7 +174,6 @@ export default function Header() {
             : "pointer-events-none opacity-0"
         }`}
       >
-        {/* Overlay */}
         <button
           aria-label="Close menu overlay"
           onClick={() => setMenuOpen(false)}
@@ -194,7 +182,6 @@ export default function Header() {
           }`}
         />
 
-        {/* Side panel */}
         <div
           className={`absolute right-0 top-0 h-full w-full md:w-[78%] lg:w-[62%] xl:w-[57%] transform overflow-hidden bg-[#062f33] transition-transform duration-500 ${
             menuOpen ? "translate-x-0" : "translate-x-full"
