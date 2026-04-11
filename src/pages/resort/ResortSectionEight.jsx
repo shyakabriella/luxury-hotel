@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from "react";
+import homeeight from "../../assets/homepage/homeeight.JPG";
+import homenine from "../../assets/homepage/homenine.png";
+import homeone from "../../assets/homepage/homeone.png";
+import hometen from "../../assets/homepage/hometen.png";
 
 const slides = [
-  { image: "/home1.jpg", alt: "Resort view one" },
-  { image: "/home2.jpg", alt: "Resort view two" },
-  { image: "/home3.jpg", alt: "Resort view three" },
-  { image: "/home4.jpg", alt: "Resort view four" },
+  { image: homeeight, alt: "Resort view one" },
+  { image: homenine, alt: "Resort view two" },
+  { image: homeone, alt: "Resort view three" },
+  { image: hometen, alt: "Resort view four" },
 ];
 
 export default function ResortSectionEight() {

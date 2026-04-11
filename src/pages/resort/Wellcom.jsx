@@ -1,23 +1,27 @@
 import React, { useEffect, useState } from "react";
+import homesix from "../../assets/homepage/homesix.jpg";
+import hometwo from "../../assets/homepage/hometwo.jpg";
+import homethree from "../../assets/homepage/homethree.jpg";
+import homefour from "../../assets/homepage/homefour.jpg";
 
 const slides = [
   {
-    image: "/home1.jpg",
+    image: homesix,
     title: "Unforgettable",
     subtitle: "Charm & Adventure",
   },
   {
-    image: "/home2.jpg",
+    image: hometwo,
     title: "Luxury Escape",
     subtitle: "Peace, Beauty & Comfort",
   },
   {
-    image: "/home3.jpg",
+    image: homethree,
     title: "Elegant Stays",
     subtitle: "Timeless Hospitality",
   },
   {
-    image: "/home4.jpg",
+    image: homefour,
     title: "Memorable Moments",
     subtitle: "Where Dreams Feel Real",
   },

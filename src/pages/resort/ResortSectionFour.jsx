@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from "react";
+import homeseven from "../../assets/homepage/homeseven.jpg";
+import homeeight from "../../assets/homepage/homeeight.JPG";
+import homenine from "../../assets/homepage/homenine.png";
+import hometen from "../../assets/homepage/hometen.png";
 
 const slides = [
   {
-    image: "/home1.jpg",
+    image: homeseven,
     eyebrow: "For Every Event",
     titleLine1: "Unforgettable",
     titleLine2: "Weddings",
@@ -11,7 +15,7 @@ const slides = [
     buttonText: "Learn More",
   },
   {
-    image: "/home2.jpg",
+    image: homeeight,
     eyebrow: "For Every Event",
     titleLine1: "Luxury",
     titleLine2: "Getaways",
@@ -20,7 +24,7 @@ const slides = [
     buttonText: "Discover More",
   },
   {
-    image: "/home3.jpg",
+    image: homenine,
     eyebrow: "For Every Event",
     titleLine1: "Outdoor",
     titleLine2: "Education",
@@ -29,7 +33,7 @@ const slides = [
     buttonText: "Learn More",
   },
   {
-    image: "/home4.jpg",
+    image: hometen,
     eyebrow: "For Every Event",
     titleLine1: "Elegant",
     titleLine2: "Moments",

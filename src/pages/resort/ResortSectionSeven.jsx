@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import homeeight from "../../assets/homepage/homeeight.JPG";
 
 function TreeIcon() {
   return (
@@ -56,7 +57,7 @@ export default function ResortSectionSeven() {
           >
             <div className="mx-auto w-full max-w-[980px] overflow-hidden">
               <img
-                src="/home1.jpg"
+                src={homeeight}
                 alt="Resort landscape"
                 className="h-[260px] w-full object-cover sm:h-[340px] md:h-[430px] lg:h-[520px]"
               />

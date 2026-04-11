@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import homeone from "../../assets/homepage/homeone.png";
 
 export default function ResortSectionThree() {
   const sectionRef = useRef(null);
@@ -78,7 +79,7 @@ export default function ResortSectionThree() {
             }`}
           >
             <img
-              src="/home3.jpg"
+              src={homeone}
               alt="People enjoying horseback activities at the resort"
               className="absolute inset-0 h-full w-full object-cover"
             />
