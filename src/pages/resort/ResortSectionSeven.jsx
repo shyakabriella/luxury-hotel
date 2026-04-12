@@ -44,7 +44,7 @@ export default function ResortSectionSeven() {
   return (
     <section
       ref={sectionRef}
-      className="w-full overflow-hidden bg-[#efeee8] py-14 md:py-20 lg:py-24"
+      className="w-full overflow-hidden bg-[#efeee8] py-12 md:py-16 lg:py-18"
       style={{ fontFamily: "Montserrat, sans-serif" }}
     >
       <div className="mx-auto max-w-[1600px] px-5 sm:px-6 md:px-10 lg:px-14 xl:px-20">

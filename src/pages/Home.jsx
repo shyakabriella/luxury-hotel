@@ -8,6 +8,12 @@ import ResortSectionFive from "./resort/ResortSectionFive";
 import ResortSectionSix from "./resort/ResortSectionSix";
 import ResortSectionSeven from "./resort/ResortSectionSeven";
 import ResortSectionEight from "./resort/ResortSectionEight";
+import ResortSectionNine from "./resort/ResortSectionNine";
+import ResortSectionTen from "./resort/ResortSectionTen";
+import ResortSectionEleven from "./resort/ResortSectionEleven";
+import ResortSectionTwelve from "./resort/ResortSectionTwelve";
+import ResortSectionThirteen from "./resort/ResortSectionThirteen";
+import ResortSectionFourteen from "./resort/ResortSectionFourteen";
 
 export default function Home() {
   return (
@@ -21,6 +27,12 @@ export default function Home() {
       <ResortSectionSix />
       <ResortSectionSeven />
       <ResortSectionEight />
+      <ResortSectionNine />
+      <ResortSectionTen />
+      <ResortSectionThirteen />
+      <ResortSectionFourteen />
+      <ResortSectionEleven />
+      <ResortSectionTwelve />
     </>
   );
 }
