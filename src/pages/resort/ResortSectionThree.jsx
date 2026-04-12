@@ -14,7 +14,7 @@ export default function ResortSectionThree() {
           setShow(true);
         }
       },
-      { threshold: 0.2 }
+      { threshold: 0.2 },
     );
 
     if (currentSection) {
@@ -54,10 +54,13 @@ export default function ResortSectionThree() {
               </h2>
 
               <p className="mt-7 max-w-[620px] text-[17px] leading-[1.9] text-[#2d3b3c] sm:text-[18px] md:text-[19px] lg:text-[20px]">
-                Jump right into the fun of Wonder Valley Ranch Resort. From
-                horseback riding and archery to tennis, volleyball, go-karts,
-                and ziplining, you&apos;ll find a plethora of adventurous
-                activities to choose from during your time at our resort.
+                Step into a refined living experience with our Luxury
+                Apartments. From modern interiors and spacious layouts to
+                premium amenities and beautifully designed communal spaces,
+                everything is crafted to elevate your everyday lifestyle.
+                Whether you're relaxing at home or enjoying the surrounding
+                environment, you’ll find comfort, style, and convenience at
+                every turn.
               </p>
 
               <div className="mt-8 flex flex-col gap-4 sm:w-fit md:mt-10">
