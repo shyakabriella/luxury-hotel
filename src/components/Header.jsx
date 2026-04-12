@@ -2,16 +2,17 @@ import React, { useEffect, useState } from "react";
 
 const LOGO_SRC = "/losgo.png";
 const GROUP_MEETING_URL = "https://www.groupmeeting.ashbhub.com/";
+const WEDDINGS_URL = "https://www.wedding.luxurygardenpalace.com/";
 
 const topNavLinks = [
   { label: "Conferences", href: GROUP_MEETING_URL },
-  { label: "Weddings", href: GROUP_MEETING_URL },
+  { label: "Weddings", href: WEDDINGS_URL },
   { label: "Accommodations", href: "/accommodations" },
 ];
 
 const menuLinks = [
   { label: "Conferences", href: GROUP_MEETING_URL },
-  { label: "Weddings", href: GROUP_MEETING_URL },
+  { label: "Weddings", href: WEDDINGS_URL },
   { label: "Accommodations", href: "/accommodations" },
   { label: "Outdoor Education", href: "/outdoor-education" },
   { label: "Activities", href: "/activities" },
