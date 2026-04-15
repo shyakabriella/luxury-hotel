@@ -222,7 +222,7 @@ export default function Footer() {
       <div>
         <div className="mx-auto flex max-w-[1200px] flex-col items-center justify-between gap-4 px-5 py-6 text-center text-[13px] text-white/90 sm:px-6 md:flex-row md:px-8 lg:px-10">
           <p>Luxury Garden Palace. 2026. All Rights Reserved.</p>
-          <p>Website Designed In partnership with African Safari & Hotel Booking Hub</p>
+          <p>In partnership with African Safari & Hotel Booking Hub</p>
         </div>
       </div>
     </footer>
