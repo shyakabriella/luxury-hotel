@@ -3,12 +3,16 @@ import homeeight from "../../assets/homepage/homeeight.JPG";
 import homenine from "../../assets/homepage/homenine.png";
 import homeone from "../../assets/homepage/homeone.png";
 import hometen from "../../assets/homepage/hometen.png";
+import homeEleven from "../../assets/homepage/welcomeToWedding.jpeg";
+import homeTwelve from "../../assets/homepage/weddingCouple.jpeg";
 
 const slides = [
   { image: homeeight, alt: "Resort view one" },
   { image: homenine, alt: "Resort view two" },
+  { image: homeTwelve, alt: "Resort view four" },
   { image: homeone, alt: "Resort view three" },
   { image: hometen, alt: "Resort view four" },
+  { image: homeEleven, alt: "Resort view four" },
 ];
 
 export default function ResortSectionEight() {

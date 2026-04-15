@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import homeseven from "../../assets/homepage/homeseven.jpg";
 import homeeight from "../../assets/homepage/homeeight.JPG";
-import homenine from "../../assets/homepage/homenine.png";
+import homenine from "../../assets/homepage/welcomeToWedding.jpeg";
 import hometen from "../../assets/homepage/hometen.png";
 
 const slides = [

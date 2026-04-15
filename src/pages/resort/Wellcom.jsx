@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import homesix from "../../assets/homepage/homesix.jpg";
 import hometwo from "../../assets/homepage/hometwo.jpg";
-import homethree from "../../assets/homepage/homethree.jpg";
+import homethree from "../../assets/homepage/weddingCouple.jpeg";
 import homefour from "../../assets/homepage/homefour.jpg";
+import welcomeWedding from "../../assets/homepage/welcomeToWedding.jpeg";
 
 const slides = [
   {
-    image: homesix,
+    image: welcomeWedding,
     title: "Unforgettable",
     subtitle: "Charm & Adventure",
   },
