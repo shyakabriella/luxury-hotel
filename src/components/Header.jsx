@@ -1,30 +1,53 @@
 import React, { useEffect, useState } from "react";
 
 const LOGO_SRC = "/losgo.png";
-const GROUP_MEETING_URL = "https://www.groupmeeting.ashbhub.com/";
+const RESERVE_URL = "https://www.luxuryweb.ashbhub.com/";
 const WEDDINGS_URL = "https://www.wedding.luxurygardenpalace.com/";
+const MEETING_ROOM_URL = "https://www.groupmeeting.ashbhub.com/";
 
 const topNavLinks = [
-  { label: "Conferences", href: GROUP_MEETING_URL },
-  { label: "Weddings", href: WEDDINGS_URL },
-  { label: "Accommodations", href: "/accommodations" },
+  { label: "Wedding & Packages", href: WEDDINGS_URL },
+  { label: "Restaurant & Bar", href: "/restaurant-bar" },
+  { label: "Apartments", href: "/apartments" },
+  { label: "Meeting Room", href: MEETING_ROOM_URL },
+  { label: "Gym & Pool", href: "/gym-pool" },
+  { label: "Massage & SPA", href: "/spa" },
 ];
 
-const menuLinks = [
-  { label: "Conferences", href: GROUP_MEETING_URL },
-  { label: "Weddings", href: WEDDINGS_URL },
-  { label: "Accommodations", href: "/accommodations" },
-  { label: "Outdoor Education", href: "/outdoor-education" },
-  { label: "Activities", href: "/activities" },
-  { label: "Specials", href: "/specials" },
-  { label: "About Us", href: "/about" },
-  { label: "Gallery", href: "/gallery" },
+const menuSections = [
+  {
+    title: "Our Services",
+    links: [
+      { label: "Wedding & Packages", href: WEDDINGS_URL },
+      { label: "Restaurant & Bar", href: "/restaurant-bar" },
+      { label: "Apartments", href: "/apartments" },
+      { label: "Children Leisure", href: "/children-leisure" },
+      { label: "Sauna, Massage & Spa", href: "/spa" },
+      { label: "Meeting Room", href: MEETING_ROOM_URL },
+      { label: "Gym & Pool", href: "/gym-pool" },
+    ],
+  },
+  {
+    title: "Facilities",
+    links: [
+      { label: "Enough Parking", href: "/parking" },
+      { label: "Recreation Center", href: "/recreation-center" },
+    ],
+  },
+  {
+    title: "Why Choose Us",
+    links: [{ label: "Convincing Elements On Site", href: "/why-choose-us" }],
+  },
+  {
+    title: "Food & Orders",
+    links: [{ label: "Make Order & Menu", href: "/menu-order" }],
+  },
 ];
 
 const bottomLinks = [
+  { label: "About Us", href: "/about" },
+  { label: "Gallery", href: "/gallery" },
   { label: "Contact Us", href: "/contact" },
-  { label: "Careers", href: "/careers" },
-  { label: "Summer Camp", href: "/summer-camp" },
 ];
 
 function HeaderLogo({ isScrolled = false, menuVersion = false }) {
@@ -41,6 +64,18 @@ function HeaderLogo({ isScrolled = false, menuVersion = false }) {
             : "h-[150px] max-w-[520px] md:h-[84px] lg:h-[96px]"
         }`}
       />
+    </a>
+  );
+}
+
+function MenuItem({ item, onClick }) {
+  return (
+    <a
+      href={item.href}
+      onClick={onClick}
+      className="inline-block text-[18px] font-light leading-tight tracking-wide text-white transition hover:text-[#d8c29b] sm:text-[22px] md:text-[26px] lg:text-[30px]"
+    >
+      {item.label}
     </a>
   );
 }
@@ -115,25 +150,22 @@ export default function Header() {
                 : "min-h-[170px] md:min-h-[144px]"
             }`}
           >
-            {/* Logo */}
             <div className="flex justify-center md:block">
               <HeaderLogo isScrolled={isScrolled} />
             </div>
 
-            {/* Center desktop nav */}
-            <nav className="hidden lg:flex items-center gap-8 xl:gap-12">
+            <nav className="hidden lg:flex items-center gap-5 xl:gap-7 2xl:gap-9">
               {topNavLinks.map((item) => (
                 <a
                   key={item.label}
                   href={item.href}
-                  className="text-[18px] font-normal text-white/95 transition hover:text-[#d8c29b]"
+                  className="text-[15px] xl:text-[17px] font-normal text-white/95 transition hover:text-[#d8c29b] whitespace-nowrap"
                 >
                   {item.label}
                 </a>
               ))}
             </nav>
 
-            {/* Right desktop side */}
             <div className="hidden md:flex items-center gap-6 lg:gap-8 shrink-0">
               <div className="flex flex-col items-end">
                 <span className="text-sm uppercase tracking-wide text-white">
@@ -141,7 +173,7 @@ export default function Header() {
                 </span>
 
                 <a
-                  href="https://www.luxuryweb.ashbhub.com/"
+                  href={RESERVE_URL}
                   className="mt-3 inline-flex min-w-[180px] items-center justify-center bg-white px-8 py-3 text-[15px] font-semibold uppercase tracking-wide text-[#9b8957] transition hover:bg-[#f7f2eb]"
                 >
                   Reserve
@@ -167,7 +199,6 @@ export default function Header() {
         </div>
       </header>
 
-      {/* Large slide menu */}
       <div
         className={`fixed inset-0 z-[90] transition-all duration-500 ${
           menuOpen
@@ -214,25 +245,34 @@ export default function Header() {
               </button>
             </div>
 
-            <div className="flex flex-1 items-center justify-center">
-              <nav className="w-full max-w-[620px]">
-                <ul className="space-y-4 text-center md:space-y-5">
-                  {menuLinks.map((item) => (
-                    <li key={item.label}>
-                      <a
-                        href={item.href}
-                        onClick={() => setMenuOpen(false)}
-                        className="inline-block text-[20px] font-light leading-tight tracking-wide text-white transition hover:text-[#d8c29b] sm:text-[24px] md:text-[30px] lg:text-[36px]"
-                      >
-                        {item.label}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </nav>
+            <div className="mt-8 flex-1 overflow-y-auto pr-1">
+              <div className="mx-auto w-full max-w-[760px] space-y-10">
+                {menuSections.map((section) => (
+                  <div key={section.title} className="text-center">
+                    <div className="mb-4 flex items-center gap-4">
+                      <span className="h-px flex-1 bg-white/20" />
+                      <h3 className="text-[12px] uppercase tracking-[0.35em] text-[#d8c29b] sm:text-[13px]">
+                        {section.title}
+                      </h3>
+                      <span className="h-px flex-1 bg-white/20" />
+                    </div>
+
+                    <ul className="space-y-3 md:space-y-4">
+                      {section.links.map((item) => (
+                        <li key={item.label}>
+                          <MenuItem
+                            item={item}
+                            onClick={() => setMenuOpen(false)}
+                          />
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
             </div>
 
-            <div className="pb-2">
+            <div className="pt-6 pb-2">
               <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-white">
                 {bottomLinks.map((item) => (
                   <a
