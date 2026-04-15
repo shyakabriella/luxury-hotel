@@ -3,14 +3,13 @@ import React, { useEffect, useState } from "react";
 const LOGO_SRC = "/losgo.png";
 const RESERVE_URL = "https://www.luxuryweb.ashbhub.com/";
 const WEDDINGS_URL = "https://www.wedding.luxurygardenpalace.com/";
-const MEETING_ROOM_URL = "https://www.groupmeeting.ashbhub.com/";
+const APARTMENTS_URL = "https://www.groupmeeting.ashbhub.com/";
 const RESTO_BAR_URL = "https://resto.luxurygardenpalace.com/";
 
 const topNavLinks = [
   { label: "Wedding", href: WEDDINGS_URL },
   { label: "Restaurant", href: RESTO_BAR_URL },
-  { label: "Apartments", href: "/apartments" },
-  { label: "Meeting Room", href: MEETING_ROOM_URL },
+  { label: "Apartments", href: APARTMENTS_URL },
   { label: "Gym & Pool", href: "#", comingSoon: true },
   { label: "Massage & SPA", href: "#", comingSoon: true },
 ];
@@ -21,10 +20,9 @@ const menuSections = [
     links: [
       { label: "Wedding", href: WEDDINGS_URL },
       { label: "Restaurant", href: RESTO_BAR_URL },
-      { label: "Apartments", href: "/apartments" },
+      { label: "Apartments", href: APARTMENTS_URL },
       { label: "Children Leisure", href: "#", comingSoon: true },
       { label: "Sauna, Massage & Spa", href: "#", comingSoon: true },
-      { label: "Meeting Room", href: MEETING_ROOM_URL },
       { label: "Gym & Pool", href: "#", comingSoon: true },
     ],
   },
