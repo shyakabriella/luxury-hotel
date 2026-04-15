@@ -4,10 +4,11 @@ const LOGO_SRC = "/losgo.png";
 const RESERVE_URL = "https://www.luxuryweb.ashbhub.com/";
 const WEDDINGS_URL = "https://www.wedding.luxurygardenpalace.com/";
 const MEETING_ROOM_URL = "https://www.groupmeeting.ashbhub.com/";
+const RESTO_BAR_URL = "https://resto.luxurygardenpalace.com/";
 
 const topNavLinks = [
   { label: "Wedding & Packages", href: WEDDINGS_URL },
-  { label: "Restaurant & Bar", href: "/restaurant-bar" },
+  { label: "Restaurant & Bar", href: RESTO_BAR_URL },
   { label: "Apartments", href: "/apartments" },
   { label: "Meeting Room", href: MEETING_ROOM_URL },
   { label: "Gym & Pool", href: "/gym-pool" },
@@ -19,7 +20,7 @@ const menuSections = [
     title: "Our Services",
     links: [
       { label: "Wedding & Packages", href: WEDDINGS_URL },
-      { label: "Restaurant & Bar", href: "/restaurant-bar" },
+      { label: "Restaurant & Bar", href: RESTO_BAR_URL },
       { label: "Apartments", href: "/apartments" },
       { label: "Children Leisure", href: "/children-leisure" },
       { label: "Sauna, Massage & Spa", href: "/spa" },
