@@ -7,41 +7,47 @@ const MEETING_ROOM_URL = "https://www.groupmeeting.ashbhub.com/";
 const RESTO_BAR_URL = "https://resto.luxurygardenpalace.com/";
 
 const topNavLinks = [
-  { label: "Wedding & Packages", href: WEDDINGS_URL },
-  { label: "Restaurant & Bar", href: RESTO_BAR_URL },
+  { label: "Wedding", href: WEDDINGS_URL },
+  { label: "Restaurant", href: RESTO_BAR_URL },
   { label: "Apartments", href: "/apartments" },
   { label: "Meeting Room", href: MEETING_ROOM_URL },
-  { label: "Gym & Pool", href: "/gym-pool" },
-  { label: "Massage & SPA", href: "/spa" },
+  { label: "Gym & Pool", href: "#", comingSoon: true },
+  { label: "Massage & SPA", href: "#", comingSoon: true },
 ];
 
 const menuSections = [
   {
     title: "Our Services",
     links: [
-      { label: "Wedding & Packages", href: WEDDINGS_URL },
-      { label: "Restaurant & Bar", href: RESTO_BAR_URL },
+      { label: "Wedding", href: WEDDINGS_URL },
+      { label: "Restaurant", href: RESTO_BAR_URL },
       { label: "Apartments", href: "/apartments" },
-      { label: "Children Leisure", href: "/children-leisure" },
-      { label: "Sauna, Massage & Spa", href: "/spa" },
+      { label: "Children Leisure", href: "#", comingSoon: true },
+      { label: "Sauna, Massage & Spa", href: "#", comingSoon: true },
       { label: "Meeting Room", href: MEETING_ROOM_URL },
-      { label: "Gym & Pool", href: "/gym-pool" },
+      { label: "Gym & Pool", href: "#", comingSoon: true },
     ],
   },
   {
     title: "Facilities",
     links: [
-      { label: "Enough Parking", href: "/parking" },
-      { label: "Recreation Center", href: "/recreation-center" },
+      { label: "Enough Parking", href: "#", comingSoon: true },
+      { label: "Recreation Center", href: "#", comingSoon: true },
     ],
   },
   {
     title: "Why Choose Us",
-    links: [{ label: "Convincing Elements On Site", href: "/why-choose-us" }],
+    links: [
+      {
+        label: "Convincing Elements On Site",
+        href: "#",
+        comingSoon: true,
+      },
+    ],
   },
   {
     title: "Food & Orders",
-    links: [{ label: "Make Order & Menu", href: "/menu-order" }],
+    links: [{ label: "Make Order & Menu", href: "#", comingSoon: true }],
   },
 ];
 
@@ -70,10 +76,22 @@ function HeaderLogo({ isScrolled = false, menuVersion = false }) {
 }
 
 function MenuItem({ item, onClick }) {
+  if (item.comingSoon) {
+    return (
+      <button
+        type="button"
+        onClick={() => onClick(item)}
+        className="inline-block text-[18px] font-light leading-tight tracking-wide text-white transition hover:text-[#d8c29b] sm:text-[22px] md:text-[26px] lg:text-[30px]"
+      >
+        {item.label}
+      </button>
+    );
+  }
+
   return (
     <a
       href={item.href}
-      onClick={onClick}
+      onClick={() => onClick(item)}
       className="inline-block text-[18px] font-light leading-tight tracking-wide text-white transition hover:text-[#d8c29b] sm:text-[22px] md:text-[26px] lg:text-[30px]"
     >
       {item.label}
@@ -84,6 +102,8 @@ function MenuItem({ item, onClick }) {
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [comingSoonOpen, setComingSoonOpen] = useState(false);
+  const [comingSoonTitle, setComingSoonTitle] = useState("");
 
   useEffect(() => {
     const handleScroll = () => {
@@ -99,7 +119,7 @@ export default function Header() {
   }, []);
 
   useEffect(() => {
-    if (menuOpen) {
+    if (menuOpen || comingSoonOpen) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "";
@@ -108,12 +128,13 @@ export default function Header() {
     return () => {
       document.body.style.overflow = "";
     };
-  }, [menuOpen]);
+  }, [menuOpen, comingSoonOpen]);
 
   useEffect(() => {
     const handleKeyDown = (event) => {
       if (event.key === "Escape") {
         setMenuOpen(false);
+        setComingSoonOpen(false);
       }
     };
 
@@ -136,6 +157,17 @@ export default function Header() {
     };
   }, []);
 
+  const handleItemClick = (item) => {
+    if (item.comingSoon) {
+      setMenuOpen(false);
+      setComingSoonTitle(item.label);
+      setComingSoonOpen(true);
+      return;
+    }
+
+    setMenuOpen(false);
+  };
+
   return (
     <>
       <header
@@ -156,15 +188,26 @@ export default function Header() {
             </div>
 
             <nav className="hidden lg:flex items-center gap-5 xl:gap-7 2xl:gap-9">
-              {topNavLinks.map((item) => (
-                <a
-                  key={item.label}
-                  href={item.href}
-                  className="text-[15px] xl:text-[17px] font-normal text-white/95 transition hover:text-[#d8c29b] whitespace-nowrap"
-                >
-                  {item.label}
-                </a>
-              ))}
+              {topNavLinks.map((item) =>
+                item.comingSoon ? (
+                  <button
+                    key={item.label}
+                    type="button"
+                    onClick={() => handleItemClick(item)}
+                    className="text-[15px] xl:text-[17px] font-normal text-white/95 transition hover:text-[#d8c29b] whitespace-nowrap"
+                  >
+                    {item.label}
+                  </button>
+                ) : (
+                  <a
+                    key={item.label}
+                    href={item.href}
+                    className="text-[15px] xl:text-[17px] font-normal text-white/95 transition hover:text-[#d8c29b] whitespace-nowrap"
+                  >
+                    {item.label}
+                  </a>
+                )
+              )}
             </nav>
 
             <div className="hidden md:flex items-center gap-6 lg:gap-8 shrink-0">
@@ -261,10 +304,7 @@ export default function Header() {
                     <ul className="space-y-3 md:space-y-4">
                       {section.links.map((item) => (
                         <li key={item.label}>
-                          <MenuItem
-                            item={item}
-                            onClick={() => setMenuOpen(false)}
-                          />
+                          <MenuItem item={item} onClick={handleItemClick} />
                         </li>
                       ))}
                     </ul>
@@ -288,6 +328,38 @@ export default function Header() {
               </div>
             </div>
           </div>
+        </div>
+      </div>
+
+      <div
+        className={`fixed inset-0 z-[120] transition-all duration-300 ${
+          comingSoonOpen
+            ? "pointer-events-auto opacity-100"
+            : "pointer-events-none opacity-0"
+        }`}
+      >
+        <button
+          type="button"
+          aria-label="Close coming soon popup"
+          onClick={() => setComingSoonOpen(false)}
+          className="absolute inset-0 bg-black/60"
+        />
+
+        <div className="absolute left-1/2 top-1/2 w-[90%] max-w-md -translate-x-1/2 -translate-y-1/2 rounded-2xl bg-white px-6 py-8 text-center shadow-2xl">
+          <h3 className="text-2xl font-semibold text-[#1d3335]">
+            Coming Soon
+          </h3>
+          <p className="mt-3 text-[16px] leading-7 text-gray-700">
+            {comingSoonTitle} will be available soon.
+          </p>
+
+          <button
+            type="button"
+            onClick={() => setComingSoonOpen(false)}
+            className="mt-6 inline-flex items-center justify-center rounded-md bg-[#1d3335] px-6 py-3 text-sm font-semibold uppercase tracking-wide text-white transition hover:bg-[#28484b]"
+          >
+            Close
+          </button>
         </div>
       </div>
     </>
