@@ -4,6 +4,8 @@ import Layouts from "../components/Layouts";
 import Home from "../pages/Home";
 import MassageAndSpa from "../pages/spa/MassageAndSpa";
 import Career from "../pages/careers/Career";
+import PrivacyPolicy from "../pages/legacy/PrivacyPolicy";
+import Sitemap from "../pages/legacy/Sitemap";
 
 export default function AppRoutes() {
   return (
@@ -12,6 +14,8 @@ export default function AppRoutes() {
         <Route index element={<Home />} />
         <Route path="spa" element={<MassageAndSpa />} />
         <Route path="careers" element={<Career />} />
+        <Route path="privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="sitemap" element={<Sitemap />} />
       </Route>
     </Routes>
   );

@@ -162,14 +162,16 @@ export default function Footer() {
 
               <div className="space-y-3 text-center sm:text-left">
                 <a
-                  href="#"
+                  href="/privacy-policy"
+                  target="_blank"
                   className="block text-[16px] text-white underline underline-offset-4"
                 >
                   Privacy Policy
                 </a>
                 
                 <a
-                  href="#"
+                  href="/sitemap"
+                  target="_blank"
                   className="block text-[16px] text-white underline underline-offset-4"
                 >
                   Sitemap
