@@ -50,7 +50,7 @@ function MobileBottomBar() {
 function SideContactTab() {
   return (
     <a
-      href="https://direct-book.com/properties/luxurygardenpalace/contact?locale=en&items[0][adults]=2&items[0][children]=0&items[0][infants]=0&currency=USD&checkInDate=2026-04-16&checkOutDate=2026-04-17&trackPage=yes"
+      href="https://direct-book.com/properties/luxurygardenpalace/contact?locale=en"
       className="fixed left-0 top-1/2 z-[75] -translate-y-1/2 rounded-r-md border border-black/20 bg-white px-2 py-4 text-[#555] shadow-md transition hover:bg-[#f7f5f2]"
     >
       <span className="[writing-mode:vertical-rl] rotate-180 text-[12px] font-medium tracking-[0.08em] md:text-[13px]">
@@ -62,14 +62,11 @@ function SideContactTab() {
 
 export default function Layouts() {
   const location = useLocation();
-
-  // Define which routes should have banner-style hero with overlay nav
-  const bannerPages = ["/", "/spa", "/wedding", "/restaurant"];
+  const bannerPages = ["/", "/spa", "/wedding", "/restaurant", "/career"];
   const isBannerPage = bannerPages.includes(location.pathname);
 
   return (
     <div className="min-h-screen bg-[#f3f2ed]">
-      {/* Header always above everything */}
       <div className="relative z-[100]">
         <TopNav />
         <Header />
@@ -78,8 +75,9 @@ export default function Layouts() {
       <SideContactTab />
 
       <main
-        className={`relative z-0 ${isBannerPage ? "pt-[56px] md:pt-[76px]" : "pt-[206px] md:pt-[172px]"
-          } pb-[74px] md:pb-0`}
+        className={`relative z-0 ${
+          isBannerPage ? "pt-[56px] md:pt-[76px]" : "pt-[206px] md:pt-[172px]"
+        } pb-[74px] md:pb-0`}
       >
         <Outlet />
       </main>

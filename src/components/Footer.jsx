@@ -151,7 +151,8 @@ export default function Footer() {
                   Contact Us
                 </a>
                 <a
-                  href="#"
+                  href="/careers"
+                  target="_blank"
                   className="block text-[16px] text-[#b39a60] underline underline-offset-4"
                 >
                   Careers
