@@ -1,16 +1,12 @@
 import React from "react";
 
-const features = [
-  "No Resort Fees",
-  "Free Wi-Fi & Parking",
-  "Flexible Rates",
-];
+const features = ["No Resort Fees", "Free Wi-Fi & Parking", "Flexible Rates"];
 
 function TreeIcon() {
   return (
     <svg
       viewBox="0 0 24 24"
-      className="h-5 w-5 md:h-6 md:w-6"
+      className="h-4 w-4 md:h-5 md:w-5"
       fill="currentColor"
       aria-hidden="true"
     >
@@ -21,15 +17,15 @@ function TreeIcon() {
 
 export default function ResortBanner() {
   return (
-    <section className="relative z-20 -mt-8 px-4 md:-mt-12 md:px-6 lg:px-10">
+    <section className="relative z-20 -mt-6 px-3 md:-mt-10 md:px-5 lg:px-8">
       <div
-        className="mx-auto max-w-[1500px] overflow-hidden border border-[#cfc8bb]/70 bg-[#f2efe8]/78 shadow-[0_8px_30px_rgba(0,0,0,0.08)] backdrop-blur-md"
+        className="mx-auto max-w-[1300px] overflow-hidden border border-[#cfc8bb]/60 bg-[#f2efe8]/80 shadow-[0_6px_20px_rgba(0,0,0,0.06)] backdrop-blur-sm"
         style={{ fontFamily: "Montserrat, sans-serif" }}
       >
-        <div className="grid grid-cols-1 md:grid-cols-[320px_1fr] lg:grid-cols-[360px_1fr]">
+        <div className="grid grid-cols-1 md:grid-cols-[220px_1fr] lg:grid-cols-[260px_1fr]">
           {/* Left title */}
-          <div className="flex items-center justify-center border-b border-[#cfc8bb]/70 px-6 py-6 text-center md:border-b-0 md:border-r md:px-8 md:py-8">
-            <h3 className="text-[28px] font-normal tracking-[-0.02em] text-[#1f3d3f] md:text-[32px] lg:text-[34px]">
+          <div className="flex items-center justify-center border-b border-[#cfc8bb]/60 px-3 py-3 text-center md:border-b-0 md:border-r md:px-4 md:py-4">
+            <h3 className="text-[12px] font-normal tracking-[-0.02em] text-[#1f3d3f] md:text-[15px] lg:text-[17px]">
               Book With Us
             </h3>
           </div>
@@ -39,17 +35,17 @@ export default function ResortBanner() {
             {features.map((item, index) => (
               <div
                 key={item}
-                className={`flex items-center justify-center gap-3 px-6 py-6 text-center ${
+                className={`flex items-center justify-center gap-2 px-3 py-3 text-center ${
                   index !== features.length - 1
-                    ? "border-b border-[#cfc8bb]/70 sm:border-b-0 sm:border-r"
+                    ? "border-b border-[#cfc8bb]/60 sm:border-b-0 sm:border-r"
                     : ""
                 }`}
               >
                 <span className="text-[#9b846b]">
-                  <TreeIcon />
+                  <TreeIcon className="w-4 h-4" />
                 </span>
 
-                <span className="text-[22px] font-normal tracking-[-0.02em] text-[#3b342f] md:text-[24px]">
+                <span className="text-[11px] font-normal tracking-[-0.01em] text-[#3b342f] md:text-[13px]">
                   {item}
                 </span>
               </div>

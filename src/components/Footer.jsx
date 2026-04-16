@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 function FacebookIcon() {
   return (
@@ -119,9 +120,8 @@ export default function Footer() {
                 <div className="mt-1 h-[2px] w-[190px] bg-white/90" />
               </div>
 
-              <div className="mt-10 space-y-1 text-[15px] leading-[1.65] text-white/95">
-                <p>Luxury Garden Palace Karama</p>
-                <p>Luxury Garden Palace Karama, KN 443 ST</p>
+              <div className="mt-5 space-y-1 text-[15px] leading-[1.65] text-white/95">
+                <p>Karama, KN 443 ST</p>
                 <p>+250 780 443 787</p>
               </div>
             </div>
@@ -144,7 +144,8 @@ export default function Footer() {
             <div className="grid grid-cols-1 gap-10 sm:grid-cols-2">
               <div className="space-y-3 text-center sm:text-left">
                 <a
-                  href="#"
+                target="_blank"
+                  href="https://direct-book.com/properties/luxurygardenpalace/contact?locale=en&items[0][adults]=2&items[0][children]=0&items[0][infants]=0&currency=USD&checkInDate=2026-04-16&checkOutDate=2026-04-17&trackPage=yes"
                   className="block text-[16px] text-[#b39a60] underline underline-offset-4"
                 >
                   Contact Us
@@ -155,12 +156,7 @@ export default function Footer() {
                 >
                   Careers
                 </a>
-                <a
-                  href="#"
-                  className="block text-[16px] text-[#b39a60] underline underline-offset-4"
-                >
-                  Summer Camp
-                </a>
+                
               </div>
 
               <div className="space-y-3 text-center sm:text-left">
@@ -170,25 +166,13 @@ export default function Footer() {
                 >
                   Privacy Policy
                 </a>
-                <a
-                  href="#"
-                  className="block text-[16px] text-white underline underline-offset-4"
-                >
-                  Accessibility
-                </a>
+                
                 <a
                   href="#"
                   className="block text-[16px] text-white underline underline-offset-4"
                 >
                   Sitemap
                 </a>
-                <a
-                  href="#"
-                  className="block text-[16px] text-white underline underline-offset-4"
-                >
-                  Consent Preferences
-                </a>
-
                 <div className="flex items-center justify-center gap-6 pt-8 sm:justify-start">
                   <a
                     href="#"
@@ -220,9 +204,13 @@ export default function Footer() {
 
       {/* bottom footer bar */}
       <div>
-        <div className="mx-auto flex max-w-[1200px] flex-col items-center justify-between gap-4 px-5 py-6 text-center text-[13px] text-white/90 sm:px-6 md:flex-row md:px-8 lg:px-10">
+        <div className="mx-auto flex max-w-[1200px] flex-col items-center justify-between gap-4 px-5 py-6 text-center text-[13px] text-white/90 sm:px-6 md:flex-row md:px-8 lg:px-8">
           <p>Luxury Garden Palace. 2026. All Rights Reserved.</p>
-          <p>In partnership with African Safari & Hotel Booking Hub</p>
+          <p>In partnership with {" "}
+             <Link to="https://www.ashbhub.com/" target="_blank" className="text-[#b39a60] hover:underline">
+                African Safari & Hotel Booking Hub
+             </Link>
+          </p>
         </div>
       </div>
     </footer>

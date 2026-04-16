@@ -71,7 +71,7 @@ function MobileBottomBar() {
 function SideContactTab() {
   return (
     <a
-      href="/contact"
+      href="https://direct-book.com/properties/luxurygardenpalace/contact?locale=en&items[0][adults]=2&items[0][children]=0&items[0][infants]=0&currency=USD&checkInDate=2026-04-16&checkOutDate=2026-04-17&trackPage=yes"
       className="fixed left-0 top-1/2 z-[75] -translate-y-1/2 rounded-r-md border border-black/20 bg-white px-2 py-4 text-[#555] shadow-md transition hover:bg-[#f7f5f2]"
       aria-label="Contact Us"
     >

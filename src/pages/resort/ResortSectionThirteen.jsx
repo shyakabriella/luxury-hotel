@@ -21,20 +21,8 @@ export default function ResortSectionThirteen() {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const images = [
-    bar1,
-    bar2,
-    bar6,
-    bar7,
-    bar3,
-    bar8,
-    bar9,
-    bar5,
-    bar10,
-    bar11,
-    bar12,
-    bar13,
-    bar4,
-    bar14,
+    bar1, bar2, bar6, bar7, bar3, bar8, bar9,
+    bar5, bar10, bar11, bar12, bar13, bar4, bar14,
   ];
 
   useEffect(() => {
@@ -42,11 +30,9 @@ export default function ResortSectionThirteen() {
       ([entry]) => {
         if (entry.isIntersecting) setShow(true);
       },
-      { threshold: 0.2 },
+      { threshold: 0.2 }
     );
-
     if (sectionRef.current) observer.observe(sectionRef.current);
-
     return () => {
       if (sectionRef.current) observer.unobserve(sectionRef.current);
     };
@@ -54,87 +40,82 @@ export default function ResortSectionThirteen() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
-    }, 2000);
-
+      setCurrentIndex((p) => (p + 1) % images.length);
+    }, 2500);
     return () => clearInterval(interval);
-  }, [images.length]);
+  }, []);
 
-  const next = () => {
-    setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
-  };
-
-  const prev = () => {
-    setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
-  };
+  const next = () => setCurrentIndex((p) => (p + 1) % images.length);
+  const prev = () => setCurrentIndex((p) => (p - 1 + images.length) % images.length);
 
   return (
     <section
       ref={sectionRef}
-      className="w-full bg-white py-10 md:py-15 overflow-hidden"
+      className="w-full bg-white py-8 md:py-10 overflow-hidden"
       style={{ fontFamily: "Montserrat, sans-serif" }}
     >
-      <div className="mx-auto max-w-[1280px] px-6 md:px-10 lg:px-16">
+      <div className="mx-auto max-w-[950px] px-5 md:px-8">
+
+        {/* TEXT */}
         <div
-          className={`text-center mb-12 transition-all duration-1000 ease-out ${
-            show ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+          className={`text-center mb-8 transition-all duration-700 ${
+            show ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
           }`}
         >
-          <p className="text-[#b08a5a] font-medium text-[15px] md:text-[17px]">
+          <p className="text-[12px] md:text-[13px] text-[#b08a5a] font-medium">
             Restaurant & Bar Experience
           </p>
 
-          <h2 className="mt-4 text-[#1f3d3f] font-light leading-[1.05] text-[42px] md:text-[64px] lg:text-[78px]">
-            Taste.
-            <br />
-            Sip.
-            <br />
-            Enjoy.
+          <h2 className="mt-2 text-[20px] md:text-[24px] lg:text-[28px] font-light leading-[1.2] text-[#1f3d3f]">
+            Taste. <span className="text-[#b08a5a]">Sip.</span> Enjoy.
           </h2>
 
-          <p className="mt-6 text-[#2d3b3c] max-w-[700px] mx-auto text-[16px] md:text-[18px] leading-[1.8]">
-            Indulge in a refined dining and bar experience where flavor meets
-            atmosphere. From crafted cocktails to gourmet dishes, every moment
-            is designed to elevate your evenings into unforgettable experiences.
+          <p className="mt-3 max-w-[480px] mx-auto text-[12px] md:text-[14px] leading-[1.5] text-[#2d3b3c]">
+            Crafted cocktails, gourmet dishes, and a relaxed atmosphere designed
+            to elevate every evening.
           </p>
         </div>
 
+        {/* SLIDER */}
         <div
-          className={`relative w-full max-w-[900px] mx-auto h-[450px] md:h-[550px] rounded-3xl overflow-hidden shadow-2xl transition-all duration-1000 ${
+          className={`relative mx-auto max-w-[650px] h-[220px] sm:h-[260px] md:h-[300px] lg:h-[340px] rounded-xl overflow-hidden shadow-md transition-all duration-700 ${
             show ? "opacity-100 scale-100" : "opacity-0 scale-95"
           }`}
         >
-          {images.map((img, index) => (
+          {images.map((img, i) => (
             <img
-              key={index}
+              key={i}
               src={img}
               alt="Bar experience"
-              className={`absolute top-0 left-0 w-full h-full object-cover transition-opacity duration-700 ${
-                index === currentIndex ? "opacity-100" : "opacity-0"
+              className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${
+                i === currentIndex ? "opacity-100" : "opacity-0"
               }`}
             />
           ))}
 
-          <div className="absolute inset-0 bg-black/25"></div>
+          <div className="absolute inset-0 bg-black/20" />
 
+          {/* controls */}
           <button
             onClick={prev}
-            className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/70 hover:bg-white text-[#1f3d3f] p-3 rounded-full shadow"
+            className="absolute left-2 top-1/2 -translate-y-1/2 h-7 w-7 rounded-full bg-white/70 text-[#1f3d3f] text-sm"
           >
-            ◀
+            ←
           </button>
 
           <button
             onClick={next}
-            className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/70 hover:bg-white text-[#1f3d3f] p-3 rounded-full shadow"
+            className="absolute right-2 top-1/2 -translate-y-1/2 h-7 w-7 rounded-full bg-white/70 text-[#1f3d3f] text-sm"
           >
-            ▶
+            →
           </button>
 
-          <div className="absolute bottom-4 right-4 bg-white/80 px-4 py-2 rounded-full text-sm text-[#1f3d3f]">
+          {/* counter */}
+          <div className="absolute bottom-2 right-2 bg-white/80 px-2 py-1 text-[11px] rounded-full text-[#1f3d3f]">
             {currentIndex + 1} / {images.length}
           </div>
         </div>
+
       </div>
     </section>
   );

@@ -11,7 +11,6 @@ export default function AppRoutes() {
         <Route path="/" element={<Layouts />}>
           <Route index element={<Home />} />
         </Route>
-
       </Routes>
     </>
   );

@@ -2,25 +2,25 @@ import React, { useEffect, useState } from "react";
 
 const testimonials = [
   {
-    title: "From The Horse's Mouth",
-    category: "HORSE TRAIL & ARCHERY",
+    title: "Resident Stories",
+    category: "LUXURY RESIDES",
     quote:
-      "It was our first time visiting this resort. We had a great time. The staff was very friendly and helpful. The property was beautiful. We will be going again! Highly recommend!",
-    author: "-Lucia D, TripAdvisor",
+      "Living here has been a dream. The modern design, spacious rooms, and premium finishes make everyday feel special.",
+    author: "-Sophia M, Resident",
   },
   {
-    title: "From The Horse's Mouth",
-    category: "FAMILY GETAWAY",
+    title: "Resident Stories",
+    category: "CITY LIVING",
     quote:
-      "Everything was peaceful, beautiful, and welcoming. The accommodations were comfortable, the activities were exciting, and the overall experience was truly unforgettable.",
-    author: "-Emma R, TripAdvisor",
+      "The location is perfect—close to everything yet peaceful inside. Amenities like the gym and pool elevate the lifestyle.",
+    author: "-Daniel K, Resident",
   },
   {
-    title: "From The Horse's Mouth",
-    category: "WEEKEND RETREAT",
+    title: "Resident Stories",
+    category: "COMFORT & STYLE",
     quote:
-      "This place gave us the perfect mix of relaxation and adventure. The scenery was stunning, the staff was excellent, and every moment felt special from start to finish.",
-    author: "-Michael T, TripAdvisor",
+      "From the concierge service to the rooftop lounge, every detail is thoughtfully designed for comfort and elegance.",
+    author: "-Aisha R, Resident",
   },
 ];
 
@@ -29,106 +29,58 @@ export default function ResortSectionSix() {
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setCurrent((prev) => (prev + 1) % testimonials.length);
-    }, 7000);
-
+      setCurrent((p) => (p + 1) % testimonials.length);
+    }, 3000);
     return () => clearInterval(timer);
   }, []);
 
-  const goNext = () => {
-    setCurrent((prev) => (prev + 1) % testimonials.length);
-  };
-
-  const goPrev = () => {
-    setCurrent((prev) => (prev - 1 + testimonials.length) % testimonials.length);
-  };
+  const goNext = () => setCurrent((p) => (p + 1) % testimonials.length);
+  const goPrev = () => setCurrent((p) => (p - 1 + testimonials.length) % testimonials.length);
 
   return (
     <section
-      className="relative overflow-hidden bg-[#173236] py-12 sm:py-14 md:py-16 lg:py-20"
+      className="relative overflow-hidden bg-[#173236] py-8 md:py-10"
       style={{ fontFamily: "Montserrat, sans-serif" }}
     >
-      <style>
-        {`
-          @keyframes testimonialFadeSlide {
-            0% {
-              opacity: 0;
-              transform: translateY(18px);
-            }
-            100% {
-              opacity: 1;
-              transform: translateY(0);
-            }
-          }
+      <div className="absolute inset-0 bg-gradient-to-r from-[#173236] via-[#173236] to-[#1b3a3e]" />
 
-          @keyframes softGlowMove {
-            0% {
-              opacity: 0.22;
-              transform: translate3d(0, 0, 0) scale(1);
-            }
-            50% {
-              opacity: 0.38;
-              transform: translate3d(8px, -5px, 0) scale(1.04);
-            }
-            100% {
-              opacity: 0.22;
-              transform: translate3d(0, 0, 0) scale(1);
-            }
-          }
+      <div className="relative mx-auto max-w-[900px] px-4 text-center">
 
-          .testimonial-copy-animate {
-            animation: testimonialFadeSlide 0.8s ease forwards;
-          }
-
-          .testimonial-glow {
-            animation: softGlowMove 10s ease-in-out infinite;
-          }
-        `}
-      </style>
-
-      {/* soft background glow */}
-      <div className="pointer-events-none absolute inset-0">
-        <div className="testimonial-glow absolute left-[12%] top-[20%] h-32 w-32 rounded-full bg-[#28484c]/25 blur-[90px]" />
-        <div className="testimonial-glow absolute right-[14%] top-[45%] h-40 w-40 rounded-full bg-[#1f4347]/25 blur-[100px]" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#1b3538] via-[#173236] to-[#1d393c]" />
-      </div>
-
-      <div className="relative mx-auto flex max-w-[1100px] items-center justify-center px-6 sm:px-8 md:px-10">
+        {/* Left arrow */}
         <button
           onClick={goPrev}
-          aria-label="Previous testimonial"
-          className="absolute left-4 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-[#b18d49] text-[14px] text-[#b18d49] transition hover:bg-white/5 sm:left-6 md:left-8"
+          className="absolute left-2 top-1/2 h-7 w-7 -translate-y-1/2 rounded-full border border-[#b18d49] text-[#b18d49] text-sm"
         >
           ←
         </button>
 
-        <div className="w-full max-w-[620px] text-center">
-          <div key={current} className="testimonial-copy-animate">
-            <h2 className="text-[20px] font-normal leading-tight text-[#b18d49] sm:text-[26px] md:text-[32px] lg:text-[38px]">
-              {testimonials[current].title}
-            </h2>
+        {/* Content */}
+        <div key={current} className="transition-all duration-700">
+          <h2 className="text-[16px] md:text-[22px] text-[#b18d49] font-light">
+            {testimonials[current].title}
+          </h2>
 
-            <p className="mt-5 text-[12px] font-medium uppercase tracking-wide text-white sm:text-[13px] md:text-[14px]">
-              “{testimonials[current].category}”
-            </p>
+          <p className="mt-2 text-[10px] md:text-[12px] uppercase tracking-wide text-white/70">
+            {testimonials[current].category}
+          </p>
 
-            <p className="mx-auto mt-4 max-w-[620px] text-[13px] leading-[1.8] text-white/92 sm:text-[15px] md:text-[17px]">
-              “{testimonials[current].quote}”
-            </p>
+          <p className="mt-3 text-[12px] md:text-[14px] leading-[1.5] text-white/80">
+            “{testimonials[current].quote}”
+          </p>
 
-            <p className="mt-8 text-[13px] text-white sm:text-[14px] md:text-[15px]">
-              {testimonials[current].author}
-            </p>
-          </div>
+          <p className="mt-4 text-[11px] md:text-[12px] text-white/60">
+            {testimonials[current].author}
+          </p>
         </div>
 
+        {/* Right arrow */}
         <button
           onClick={goNext}
-          aria-label="Next testimonial"
-          className="absolute right-4 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full border border-[#b18d49] text-[14px] text-[#b18d49] transition hover:bg-white/5 sm:right-6 md:right-8"
+          className="absolute right-2 top-1/2 h-7 w-7 -translate-y-1/2 rounded-full border border-[#b18d49] text-[#b18d49] text-sm"
         >
           →
         </button>
+
       </div>
     </section>
   );

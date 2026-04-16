@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
-import homeeight from "../../assets/homepage/homeeight.JPG";
+import homeeight from "../../assets/homepage/homeseven.jpg";
 
 function TreeIcon() {
   return (
     <svg
       viewBox="0 0 24 24"
-      className="h-10 w-10 md:h-12 md:w-12"
+      className="h-7 w-7 md:h-9 md:w-9"
       fill="currentColor"
       aria-hidden="true"
     >
@@ -23,82 +23,58 @@ export default function ResortSectionSeven() {
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          setShow(true);
-        }
+        if (entry.isIntersecting) setShow(true);
       },
-      { threshold: 0.18 }
+      { threshold: 0.2 },
     );
 
-    if (currentSection) {
-      observer.observe(currentSection);
-    }
+    if (currentSection) observer.observe(currentSection);
 
     return () => {
-      if (currentSection) {
-        observer.unobserve(currentSection);
-      }
+      if (currentSection) observer.unobserve(currentSection);
     };
   }, []);
 
   return (
     <section
       ref={sectionRef}
-      className="w-full overflow-hidden bg-[#efeee8] py-12 md:py-16 lg:py-18"
+      className="w-full overflow-hidden bg-[#efeee8] py-10 md:py-14 lg:py-16"
       style={{ fontFamily: "Montserrat, sans-serif" }}
     >
-      <div className="mx-auto max-w-[1600px] px-5 sm:px-6 md:px-10 lg:px-14 xl:px-20">
-        <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-14 xl:gap-20">
-          {/* Left image */}
+      <div className="mx-auto max-w-[1200px] px-5 sm:px-6 md:px-8 lg:px-10">
+        <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-2 lg:gap-12">
+          {/* IMAGE */}
           <div
-            className={`relative transition-all duration-1000 ease-out ${
-              show ? "translate-x-0 opacity-100" : "-translate-x-16 opacity-0"
+            className={`relative transition-all duration-700 ${
+              show ? "opacity-100 translate-x-0" : "-translate-x-10 opacity-0"
             }`}
           >
-            <div className="mx-auto w-full max-w-[980px] overflow-hidden">
-              <img
-                src={homeeight}
-                alt="Resort landscape"
-                className="h-[260px] w-full object-cover sm:h-[340px] md:h-[430px] lg:h-[520px]"
-              />
-            </div>
-
-            {/* Overlapping round badge */}
-            <div className="absolute right-[-14px] top-1/2 hidden -translate-y-1/2 lg:flex">
-              <div className="flex h-[92px] w-[92px] items-center justify-center rounded-full bg-[#f6f5f0] text-[#213739] shadow-[0_8px_24px_rgba(0,0,0,0.08)]">
-                <TreeIcon />
-              </div>
-            </div>
+            <img
+              src={homeeight}
+              alt="Resort landscape"
+              className="h-[180px] w-full rounded-md object-cover sm:h-[240px] md:h-[300px] lg:h-[340px]"
+            />
+            
           </div>
 
-          {/* Right content */}
+          {/* CONTENT */}
           <div
-            className={`transition-all duration-1000 ease-out ${
-              show ? "translate-x-0 opacity-100" : "translate-x-16 opacity-0"
+            className={`transition-all duration-700 flex items-center justify-center ${
+              show ? "opacity-100 translate-x-0" : "translate-x-10 opacity-0"
             }`}
           >
-            <div className="mx-auto max-w-[560px] text-center lg:mx-0 lg:text-left">
-              <p className="text-[18px] font-medium text-[#a17d5a] sm:text-[20px] md:text-[22px]">
+            <div className="max-w-[480px] text-center">
+              <p className="text-[13px] md:text-[15px] font-medium text-[#a17d5a]">
                 Luxury
               </p>
 
-              <h2 className="mt-5 text-[42px] font-light leading-[0.95] tracking-[-0.03em] text-[#1e3b3d] sm:text-[56px] md:text-[70px] lg:text-[82px] xl:text-[90px]">
-                The Lay
-                <br />
-                Of The Land
+              <h2 className="mt-3 text-[20px] md:text-[22px] lg:text-[27px] font-light leading-[1.05] text-[#1e3b3d]">
+                The Lay Of The Land
               </h2>
 
-              <p className="mt-7 max-w-[520px] text-[17px] leading-[1.9] text-[#334243] sm:text-[18px] md:text-[19px]">
-                Our one-of-a-kind property sets the scene for exceptional
-                activities with state-of-the-art facilities. We invite you to
-                explore sports courts, horseshoe pits, swimming pools, biking
-                trails, a trampoline center, a paintball course, and so much
-                more.
+              <p className="mt-4 text-[14px] md:text-[16px] leading-[1.7] text-[#334243]">
+                Discover vibrant event spaces, outdoor stages, and elegant venues across a fully equipped luxury property designed for celebration, connection, and unforgettable experiences.
               </p>
-
-              <button className="mt-9 inline-flex min-w-[160px] items-center justify-center bg-[#213739] px-8 py-4 text-[18px] font-normal text-white transition duration-300 hover:opacity-90">
-                Explore
-              </button>
             </div>
           </div>
         </div>

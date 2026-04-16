@@ -6,78 +6,64 @@ export default function ResortSectionTwo() {
   const [show, setShow] = useState(false);
 
   useEffect(() => {
-    const currentSection = sectionRef.current;
+    const el = sectionRef.current;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          setShow(true);
-        }
+        if (entry.isIntersecting) setShow(true);
       },
-      { threshold: 0.2 },
+      { threshold: 0.2 }
     );
 
-    if (currentSection) {
-      observer.observe(currentSection);
-    }
+    if (el) observer.observe(el);
 
     return () => {
-      if (currentSection) {
-        observer.unobserve(currentSection);
-      }
+      if (el) observer.unobserve(el);
     };
   }, []);
 
   return (
     <section
       ref={sectionRef}
-      className="w-full overflow-hidden bg-[#efeee8] py-16 md:py-20 lg:py-24"
+      className="w-full bg-[#efeee8] py-12 md:py-16 lg:py-18 overflow-hidden"
       style={{ fontFamily: "Montserrat, sans-serif" }}
     >
-      <div className="mx-auto grid max-w-[1280px] grid-cols-1 items-center gap-10 px-5 sm:px-6 md:px-10 lg:grid-cols-2 lg:gap-16 lg:px-16">
-        {/* Left Image */}
-        <div
-          className={`flex justify-center transition-all duration-1000 ease-out lg:justify-start ${
-            show ? "translate-x-0 opacity-100" : "-translate-x-16 opacity-0"
-          }`}
-        >
-          <div className="w-full max-w-[540px] overflow-hidden rounded-sm">
+      <div className="mx-auto max-w-[1100px] px-5 md:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center text-center">
+
+          {/* IMAGE */}
+          <div
+            className={`transition-all duration-700 flex justify-center ${
+              show ? "opacity-100 translate-x-0" : "-translate-x-10 opacity-0"
+            }`}
+          >
             <img
               src={homefive}
-              alt="Resort adventure"
-              className="h-[300px] w-full object-cover sm:h-[360px] md:h-[420px] lg:h-[440px]"
+              alt="Resort view"
+              className="h-[250px] sm:h-[270px] md:h-[340px] lg:h-[390px] w-full object-cover rounded-md shadow-md"
             />
           </div>
-        </div>
 
-        {/* Right Content */}
-        <div
-          className={`max-w-[620px] text-center transition-all duration-1000 ease-out lg:text-left ${
-            show ? "translate-x-0 opacity-100" : "translate-x-16 opacity-0"
-          }`}
-        >
-          <p className="text-[15px] font-medium leading-[1.6] text-[#a17d5a] sm:text-[16px] md:text-[18px]">
-            Luxury Apartments
-            <br />
-            &amp; Conference Center
-          </p>
+          {/* TEXT */}
+          <div
+            className={`transition-all duration-700 flex flex-col items-center ${
+              show ? "opacity-100 translate-x-0" : "translate-x-10 opacity-0"
+            }`}
+          >
+            <p className="text-[13px] md:text-[15px] font-medium text-[#a17d5a]">
+              Luxury Apartments & Conference Center
+            </p>
 
-          <h2 className="mt-4 text-[44px] font-light leading-[0.95] tracking-[-0.03em] text-[#1f3d3f] sm:text-[58px] md:mt-5 md:text-[72px] lg:text-[86px] xl:text-[92px]">
-            Escape The
-            <br />
-            Ordinary
-          </h2>
+            <h2 className="mt-3 text-[20px] md:text-[22px] lg:text-[27px] font-light leading-[1.2] text-[#1f3d3f]">
+              Escape The Ordinary
+            </h2>
 
-          <p className="mt-6 text-[17px] leading-[1.9] text-[#2d3b3c] sm:text-[18px] md:mt-8 md:text-[20px]">
-            Blending peaceful surroundings with modern sophistication, our
-            Luxury Apartments offer an exceptional living experience designed
-            for comfort and style. Set in a prime location, these residences
-            provide a perfect balance of privacy and accessibility, allowing
-            residents to enjoy a calm atmosphere while staying connected to the
-            city. With thoughtfully designed interiors, quality finishes, and a
-            focus on everyday convenience, it’s a place where elevated living
-            comes naturally.
-          </p>
+            <p className="mt-4 text-[14px] md:text-[16px] leading-[1.6] text-[#2d3b3c] max-w-[520px]">
+              Modern luxury living with calm surroundings, thoughtful design,
+              and everyday comfort in a prime location.
+            </p>
+          </div>
+
         </div>
       </div>
     </section>

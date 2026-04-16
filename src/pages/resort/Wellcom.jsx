@@ -1,159 +1,113 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
+
 import hometwo from "../../assets/homepage/hometwo.jpg";
-import homethree from "../../assets/homepage/weddingCouple.jpeg";
+import homethree from "../../assets/homepage/hometen.png";
 import homefour from "../../assets/homepage/homefour.jpg";
 import welcomeWedding from "../../assets/homepage/welcomeToWedding.jpeg";
 
 const slides = [
-  {
-    image: welcomeWedding,
-    title: "Unforgettable",
-    subtitle: "Charm & Adventure",
-  },
-  {
-    image: hometwo,
-    title: "Luxury Escape",
-    subtitle: "Peace, Beauty & Comfort",
-  },
-  {
-    image: homethree,
-    title: "Elegant Stays",
-    subtitle: "Timeless Hospitality",
-  },
-  {
-    image: homefour,
-    title: "Memorable Moments",
-    subtitle: "Where Dreams Feel Real",
-  },
+  { image: welcomeWedding, title: "Unforgettable", subtitle: "Charm & Adventure" },
+  { image: hometwo, title: "Luxury Escape", subtitle: "Peace, Beauty & Comfort" },
+  { image: homethree, title: "Elegant Stays", subtitle: "Timeless Hospitality" },
+  { image: homefour, title: "Memorable Moments", subtitle: "Where Dreams Feel Real" },
 ];
 
 export default function Wellcom() {
   const [current, setCurrent] = useState(0);
+  const intervalRef = useRef(null);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrent((prev) => (prev + 1) % slides.length);
-    }, 5000);
-
-    return () => clearInterval(timer);
+    startAutoPlay();
+    return () => stopAutoPlay();
   }, []);
 
-  const goNext = () => {
-    setCurrent((prev) => (prev + 1) % slides.length);
+  const startAutoPlay = () => {
+    stopAutoPlay(); // clear any existing interval
+    intervalRef.current = setInterval(() => {
+      setCurrent((p) => (p + 1) % slides.length);
+    }, 2500);
+  };
+
+  const stopAutoPlay = () => {
+    if (intervalRef.current) clearInterval(intervalRef.current);
   };
 
   const goPrev = () => {
-    setCurrent((prev) => (prev - 1 + slides.length) % slides.length);
+    stopAutoPlay();
+    setCurrent((p) => (p - 1 + slides.length) % slides.length);
+    startAutoPlay();
   };
 
-  const goToSlide = (index) => {
-    setCurrent(index);
+  const goNext = () => {
+    stopAutoPlay();
+    setCurrent((p) => (p + 1) % slides.length);
+    startAutoPlay();
+  };
+
+  const goToSlide = (i) => {
+    stopAutoPlay();
+    setCurrent(i);
+    startAutoPlay();
   };
 
   return (
-    <section className="relative min-h-[calc(100vh-92px)] overflow-hidden md:min-h-[calc(100vh-76px)]">
-      <style>
-        {`
-          @keyframes fadeUp {
-            0% {
-              opacity: 0;
-              transform: translateY(35px);
-            }
-            100% {
-              opacity: 1;
-              transform: translateY(0);
-            }
-          }
-
-          @keyframes slowZoom {
-            0% {
-              transform: scale(1);
-            }
-            100% {
-              transform: scale(1.08);
-            }
-          }
-
-          .hero-text-animate {
-            animation: fadeUp 1s ease forwards;
-          }
-
-          .hero-bg-animate {
-            animation: slowZoom 5s linear forwards;
-          }
-        `}
-      </style>
-
-      {/* Background slides */}
+    <section className="relative h-[85vh] overflow-hidden">
+      {/* BACKGROUND */}
       <div className="absolute inset-0">
-        {slides.map((slide, index) => (
+        {slides.map((s, i) => (
           <div
-            key={slide.image}
-            className={`absolute inset-0 transition-opacity duration-[1400ms] ${
-              index === current ? "opacity-100" : "opacity-0"
+            key={s.image}
+            className={`absolute inset-0 transition-opacity duration-1000 ${
+              i === current ? "opacity-100" : "opacity-0"
             }`}
-          >
-            <div
-              className={`absolute inset-0 bg-cover bg-center bg-no-repeat ${
-                index === current ? "hero-bg-animate" : ""
-              }`}
-              style={{
-                backgroundImage: `url('${slide.image}')`,
-              }}
-            />
-          </div>
+            style={{
+              backgroundImage: `url(${s.image})`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }}
+          />
         ))}
       </div>
 
-      {/* Overlay */}
-      <div className="absolute inset-0 bg-black/28" />
-      <div className="absolute inset-0 bg-gradient-to-b from-black/18 via-black/8 to-black/45" />
+      {/* OVERLAY */}
+      <div className="absolute inset-0 bg-black/30" />
 
-      {/* Content */}
-      <div className="relative z-10 flex min-h-[calc(100vh-92px)] items-center justify-center px-4 text-center md:min-h-[calc(100vh-76px)] md:items-end md:pb-20 lg:pb-24">
-        <div
-          key={current}
-          className="hero-text-animate mx-auto flex max-w-5xl flex-col items-center justify-center"
-        >
-          <h1 className="text-[44px] font-extralight leading-none tracking-tight text-white drop-shadow-[0_3px_12px_rgba(0,0,0,0.55)] sm:text-[60px] md:text-[100px] lg:text-[130px]">
+      {/* CONTENT */}
+      <div className="relative z-10 flex h-full items-center justify-center px-5 text-center">
+        <div key={current} className="animate-[fadeUp_1s_ease]">
+          <h1 className="text-[30px] sm:text-[40px] md:text-[50px] font-light text-white leading-[1.05]">
             {slides[current].title}
           </h1>
-
-          <p className="mt-3 max-w-[90%] text-[16px] font-extralight uppercase tracking-[0.14em] text-white/95 drop-shadow-[0_3px_12px_rgba(0,0,0,0.55)] sm:text-[20px] md:text-[36px] lg:text-[50px]">
+          <p className="mt-3 text-[10px] sm:text-[15px] md:text-[20px] tracking-[0.2em] text-white/90 uppercase">
             {slides[current].subtitle}
           </p>
         </div>
       </div>
 
-      {/* Arrows */}
+      {/* ARROWS */}
       <button
         onClick={goPrev}
-        className="absolute left-3 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/40 bg-black/20 text-2xl text-white backdrop-blur-sm transition hover:bg-black/35 md:left-6 md:h-12 md:w-12"
-        aria-label="Previous slide"
+        className="absolute left-4 top-1/2 -translate-y-1/2 h-9 w-9 rounded-full bg-black/30 text-white flex items-center justify-center"
       >
         ‹
       </button>
 
       <button
         onClick={goNext}
-        className="absolute right-3 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/40 bg-black/20 text-2xl text-white backdrop-blur-sm transition hover:bg-black/35 md:right-6 md:h-12 md:w-12"
-        aria-label="Next slide"
+        className="absolute right-4 top-1/2 -translate-y-1/2 h-9 w-9 rounded-full bg-black/30 text-white flex items-center justify-center"
       >
         ›
       </button>
 
-      {/* Dots */}
-      <div className="absolute bottom-20 left-1/2 z-20 flex -translate-x-1/2 items-center gap-3 md:bottom-8">
-        {slides.map((_, index) => (
+      {/* DOTS */}
+      <div className="absolute bottom-6 left-1/2 flex -translate-x-1/2 gap-2">
+        {slides.map((_, i) => (
           <button
-            key={index}
-            onClick={() => goToSlide(index)}
-            className={`h-2.5 w-2.5 rounded-full transition-all duration-300 md:h-3 md:w-3 ${
-              index === current
-                ? "scale-110 bg-white"
-                : "bg-white/50 hover:bg-white/80"
+            key={i}
+            onClick={() => goToSlide(i)}
+            className={`h-2 w-2 rounded-full transition ${
+              i === current ? "bg-white scale-110" : "bg-white/40"
             }`}
-            aria-label={`Go to slide ${index + 1}`}
           />
         ))}
       </div>

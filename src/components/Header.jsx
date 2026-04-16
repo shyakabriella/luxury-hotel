@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from "react";
 
 const LOGO_SRC = "/losgo.png";
-const RESERVE_URL = "https://www.luxuryweb.ashbhub.com/";
+const RESERVE_URL = "https://direct-book.com/properties/luxurygardenpalace/contact?locale=en&items[0][adults]=2&items[0][children]=0&items[0][infants]=0&currency=USD&checkInDate=2026-04-16&checkOutDate=2026-04-17&trackPage=yes";
 const WEDDINGS_URL = "https://www.wedding.luxurygardenpalace.com/";
-const APARTMENTS_URL = "https://www.groupmeeting.ashbhub.com/";
-const RESTO_BAR_URL = "https://resto.luxurygardenpalace.com/";
+const ACCOMODATION_URL = "https://direct-book.com/properties/luxurygardenpalace";
+
 
 const topNavLinks = [
   { label: "Wedding", href: WEDDINGS_URL },
-  { label: "Restaurant", href: RESTO_BAR_URL },
-  { label: "Apartments", href: APARTMENTS_URL },
+  { label: "Restaurant", href: "/restaurant" },
+  { label: "Accomodation", href: ACCOMODATION_URL },
+  { label: "Massage & SPA", href: "/spa"},
   { label: "Gym & Pool", href: "#", comingSoon: true },
-  { label: "Massage & SPA", href: "#", comingSoon: true },
 ];
 
 const menuSections = [
@@ -19,17 +19,16 @@ const menuSections = [
     title: "Our Services",
     links: [
       { label: "Wedding", href: WEDDINGS_URL },
-      { label: "Restaurant", href: RESTO_BAR_URL },
-      { label: "Apartments", href: APARTMENTS_URL },
-      { label: "Children Leisure", href: "#", comingSoon: true },
-      { label: "Sauna, Massage & Spa", href: "#", comingSoon: true },
+      { label: "Restaurant", href: "/restaurant" },
+      { label: "Accomodation", href: ACCOMODATION_URL },
+      { label: "Sauna, Massage & Spa", href: "/spa", comingSoon: true },
       { label: "Gym & Pool", href: "#", comingSoon: true },
     ],
   },
   {
     title: "Facilities",
     links: [
-      { label: "Enough Parking", href: "#", comingSoon: true },
+      { label: "Parking", href: "#", comingSoon: true },
       { label: "Recreation Center", href: "#", comingSoon: true },
     ],
   },
@@ -52,7 +51,7 @@ const menuSections = [
 const bottomLinks = [
   { label: "About Us", href: "/about" },
   { label: "Gallery", href: "/gallery" },
-  { label: "Contact Us", href: "/contact" },
+  { label: "Contact Us", href: "https://direct-book.com/properties/luxurygardenpalace/contact?locale=en&items[0][adults]=2&items[0][children]=0&items[0][infants]=0&currency=USD&checkInDate=2026-04-16&checkOutDate=2026-04-17&trackPage=yes" },
 ];
 
 function HeaderLogo({ isScrolled = false, menuVersion = false }) {
@@ -74,12 +73,15 @@ function HeaderLogo({ isScrolled = false, menuVersion = false }) {
 }
 
 function MenuItem({ item, onClick }) {
+  const baseClass =
+    "inline-block font-light leading-tight tracking-wide text-white transition hover:text-[#d8c29b]";
+
   if (item.comingSoon) {
     return (
       <button
         type="button"
         onClick={() => onClick(item)}
-        className="inline-block text-[18px] font-light leading-tight tracking-wide text-white transition hover:text-[#d8c29b] sm:text-[22px] md:text-[26px] lg:text-[30px]"
+        className={`${baseClass} text-[14px] sm:text-[16px] md:text-[18px] lg:text-[20px]`}
       >
         {item.label}
       </button>
@@ -90,7 +92,7 @@ function MenuItem({ item, onClick }) {
     <a
       href={item.href}
       onClick={() => onClick(item)}
-      className="inline-block text-[18px] font-light leading-tight tracking-wide text-white transition hover:text-[#d8c29b] sm:text-[22px] md:text-[26px] lg:text-[30px]"
+      className={`${baseClass} text-[14px] sm:text-[16px] md:text-[18px] lg:text-[20px]`}
     >
       {item.label}
     </a>
@@ -216,7 +218,8 @@ export default function Header() {
 
                 <a
                   href={RESERVE_URL}
-                  className="mt-3 inline-flex min-w-[180px] items-center justify-center bg-white px-8 py-3 text-[15px] font-semibold uppercase tracking-wide text-[#9b8957] transition hover:bg-[#f7f2eb]"
+                  target="_blank"
+                  className="mt-3 inline-flex min-w-[180px] items-center justify-center bg-white px-8 py-3 text-[10px] rounded-md font-semibold uppercase tracking-wide text-[#9b8957] transition hover:bg-[#f7f2eb]"
                 >
                   Reserve
                 </a>
@@ -257,7 +260,7 @@ export default function Header() {
         />
 
         <div
-          className={`absolute right-0 top-0 h-full w-full md:w-[78%] lg:w-[62%] xl:w-[57%] transform overflow-hidden bg-[#062f33] transition-transform duration-500 ${
+          className={`absolute right-0 top-0 h-full w-[80%] md:w-[60%] lg:w-[45%] xl:w-[40%] transform overflow-hidden bg-[#062f33] transition-transform duration-500 ${
             menuOpen ? "translate-x-0" : "translate-x-full"
           }`}
         >
@@ -287,7 +290,7 @@ export default function Header() {
               </button>
             </div>
 
-            <div className="mt-8 flex-1 overflow-y-auto pr-1">
+            <div className="mt-8 flex-1 overflow-y-auto pr-1 scrollbar-hide">
               <div className="mx-auto w-full max-w-[760px] space-y-10">
                 {menuSections.map((section) => (
                   <div key={section.title} className="text-center">
