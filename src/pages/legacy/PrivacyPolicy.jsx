@@ -7,7 +7,7 @@ export default function PrivacyPolicy() {
 
   return (
     <div
-      className="w-full overflow-hidden bg-[#f3f2ed] text-[#1c1c1c]"
+      className="w-full overflow-hidden bg-[#f3f2ed] -mt-25 text-[#1c1c1c]"
       style={{ fontFamily: "Montserrat, sans-serif" }}
     >
       {/* HERO */}
