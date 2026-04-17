@@ -1,13 +1,11 @@
 import React, { useEffect } from "react";
 
 // SPA ASSETS
-import spaHeroImage from "../../assets/homepage/massage-sauna/massage-one.JPG";
-import spaExperienceImage from "../../assets/homepage/massage-sauna/massage-two.JPG";
-
-import spaServiceImageOne from "../../assets/homepage/massage-sauna/massage-four.JPG";
-import spaServiceImageTwo from "../../assets/homepage/massage-sauna/massage-five.JPG";
-
-import wellnessEnhancementImageOne from "../../assets/homepage/massage-sauna/massage-three.JPG";
+import spaHeroImage from "../../assets/homepage/massage-sauna/massage-one.jpg";
+import spaExperienceImage from "../../assets/homepage/massage-sauna/massage-two.jpg";
+import spaServiceImageOne from "../../assets/homepage/massage-sauna/massage-four.jpg";
+import spaServiceImageTwo from "../../assets/homepage/massage-sauna/massage-five.jpg";
+import wellnessEnhancementImageOne from "../../assets/homepage/massage-sauna/massage-three.jpg";
 import wellnessEnhancementImageTwo from "../../assets/homepage/massage-sauna/massage-six.JPG";
 import wellnessEnhancementImageThree from "../../assets/homepage/massage-sauna/massage-seven.JPG";
 
