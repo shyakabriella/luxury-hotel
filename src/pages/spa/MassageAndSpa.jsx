@@ -6,8 +6,8 @@ import spaExperienceImage from "../../assets/homepage/massage-sauna/massage-two.
 import spaServiceImageOne from "../../assets/homepage/massage-sauna/massage-four.jpg";
 import spaServiceImageTwo from "../../assets/homepage/massage-sauna/massage-five.jpg";
 import wellnessEnhancementImageOne from "../../assets/homepage/massage-sauna/massage-three.jpg";
-import wellnessEnhancementImageTwo from "../../assets/homepage/massage-sauna/massage-six.JPG";
-import wellnessEnhancementImageThree from "../../assets/homepage/massage-sauna/massage-seven.JPG";
+import wellnessEnhancementImageTwo from "../../assets/homepage/massage-sauna/massage-six.jpg";
+import wellnessEnhancementImageThree from "../../assets/homepage/massage-sauna/massage-seven.jpg";
 
 const spaServicesData = [
   {

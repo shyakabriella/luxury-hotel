@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
 
-import resOne from "../../assets/homepage/resto-bar/res-bar-four.JPG";
+import resOne from "../../assets/homepage/resto-bar/res-bar-one.jpg";
 import resTwo from "../../assets/homepage/resto-bar/res-bar-six.png";
-import resThree from "../../assets/homepage/resto-bar/res-bar-three.JPG";
+import resThree from "../../assets/homepage/resto-bar/res-bar-three.jpg";
 
-import barOne from "../../assets/homepage/resto-bar/res-bar-eleven.PNG";
-import barTwo from "../../assets/homepage/resto-bar/res-bar-thirteen.JPG";
-import barThree from "../../assets/homepage/resto-bar/res-bar-fourteen.JPG";
+import barOne from "../../assets/homepage/resto-bar/res-bar-one.jpg";
+import barTwo from "../../assets/homepage/resto-bar/res-bar-thirteen.jpg";
+import barThree from "../../assets/homepage/resto-bar/res-bar-fourteen.jpg";
 
-import cafeOne from "../../assets/homepage/resto-bar/res-bar-nine.PNG";
-import cafeThree from "../../assets/homepage/resto-bar/res-bar-twelve.PNG";
-import cafeTwo from "../../assets/homepage/resto-bar/res-bar-fourteen.PNG";
+import cafeOne from "../../assets/homepage/resto-bar/res-bar-five.jpg";
+import cafeThree from "../../assets/homepage/resto-bar/res-bar-eleven.png";
+import cafeTwo from "../../assets/homepage/resto-bar/res-bar-fourteen.jpg";
 
 // HERO
 const restaurantHero =

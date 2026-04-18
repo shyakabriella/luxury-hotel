@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import homeeight from "../../assets/homepage/homeeight.JPG";
+import homeeight from "../../assets/homepage/homeeight.jpg";
 import homenine from "../../assets/homepage/homenine.png";
 import homeone from "../../assets/homepage/homeone.png";
 import hometen from "../../assets/homepage/hometen.png";
@@ -7,7 +7,7 @@ import homeEleven from "../../assets/homepage/welcomeToWedding.jpeg";
 import MassageOne from "../../assets/homepage/massage-sauna/massage-one.jpg";
 import MassageThree from "../../assets/homepage/massage-sauna/massage-three.jpg";
 import roomOne from "../../assets/homepage/room.jpg";
-import roomTwo from "../../assets/homepage/sallon.JPG";
+import roomTwo from "../../assets/homepage/sallon.jpg";
 import gymOne from "../../assets/homepage/gym/gym-one.jpg";
 import gymTwo from "../../assets/homepage/gym/gym-two.jpg";
 

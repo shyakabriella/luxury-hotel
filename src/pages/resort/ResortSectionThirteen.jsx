@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 
-import bar1 from "../../assets/homepage/resto-bar/res-bar-one.JPG";
-import bar2 from "../../assets/homepage/resto-bar/res-bar-two.JPG";
-import bar3 from "../../assets/homepage/resto-bar/res-bar-three.JPG";
-import bar4 from "../../assets/homepage/resto-bar/res-bar-four.JPG";
-import bar5 from "../../assets/homepage/resto-bar/res-bar-five.JPG";
+import bar1 from "../../assets/homepage/resto-bar/res-bar-one.jpg";
+import bar2 from "../../assets/homepage/resto-bar/res-bar-two.jpg";
+import bar3 from "../../assets/homepage/resto-bar/res-bar-three.jpg";
+import bar4 from "../../assets/homepage/resto-bar/res-bar-four.jpg";
+import bar5 from "../../assets/homepage/resto-bar/res-bar-five.jpg";
 import bar6 from "../../assets/homepage/resto-bar/res-bar-six.png";
 import bar7 from "../../assets/homepage/resto-bar/res-bar-seven.jpg";
 import bar8 from "../../assets/homepage/resto-bar/res-bar-eight.jpg";

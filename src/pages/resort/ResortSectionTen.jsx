@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 
-import parkingImgOne from "../../assets/homepage/parking/parking-one.JPG";
+import parkingImgOne from "../../assets/homepage/parking/parking-one.jpg";
 import parkingImgTwo from "../../assets/homepage/parking/parking-two.png";
 
 export default function ResortSectionTen() {
