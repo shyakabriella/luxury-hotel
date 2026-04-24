@@ -37,9 +37,9 @@ export default function TopNav() {
               Win a curated wedding bundle experience
             </p>
 
-            <button className="shrink-0 ml-2 text-[9px] font-semibold uppercase tracking-wide text-[#9b896f] hover:opacity-70 transition">
+            <a href="https://direct-book.com/properties/luxurygardenpalace/about?locale=en&items[0][adults]=2&items[0][children]=0&items[0][infants]=0&currency=USD&checkInDate=2026-04-24&checkOutDate=2026-04-25&trackPage=yes" target="_blank" className="shrink-0 ml-2 text-[9px] font-semibold uppercase tracking-wide text-[#9b896f] hover:opacity-70 transition">
               Learn More
-            </button>
+            </a>
           </div>
         </div>
 
