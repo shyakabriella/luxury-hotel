@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 
 const LOGO_SRC = "/losgo.png";
 const RESERVE_URL = "https://direct-book.com/properties/luxurygardenpalace/contact?locale=en&items[0][adults]=2&items[0][children]=0&items[0][infants]=0&currency=USD&checkInDate=2026-04-16&checkOutDate=2026-04-17&trackPage=yes";
 const WEDDINGS_URL = "https://www.wedding.luxurygardenpalace.com/";
 const ACCOMODATION_URL = "https://direct-book.com/properties/luxurygardenpalace";
 
-
 const topNavLinks = [
   { label: "Wedding", href: WEDDINGS_URL },
   { label: "Restaurant", href: "/restaurant" },
   { label: "Accomodation", href: ACCOMODATION_URL },
-  { label: "Massage & SPA", href: "/spa"},
+  { label: "Massage & SPA", href: "/spa" },
   { label: "Gym & Pool", href: "#", comingSoon: true },
 ];
 
@@ -21,14 +21,14 @@ const menuSections = [
       { label: "Wedding", href: WEDDINGS_URL },
       { label: "Restaurant", href: "/restaurant" },
       { label: "Accomodation", href: ACCOMODATION_URL },
-      { label: "Sauna, Massage & Spa", href: "/spa", comingSoon: true },
+      { label: "Sauna, Massage & Spa", href: "/spa" },
       { label: "Gym & Pool", href: "#", comingSoon: true },
     ],
   },
   {
     title: "Facilities",
     links: [
-      { label: "Parking", href: "#", comingSoon: true },
+      { label: "Parking", href: "/#parking" },
       { label: "Recreation Center", href: "#", comingSoon: true },
     ],
   },
@@ -49,9 +49,9 @@ const menuSections = [
 ];
 
 const bottomLinks = [
-  { label: "About Us", href: "/about" },
+  { label: "About Us", href: "https://direct-book.com/properties/luxurygardenpalace/about?locale=en" },
   { label: "Gallery", href: "/gallery" },
-  { label: "Contact Us", href: "https://direct-book.com/properties/luxurygardenpalace/contact?locale=en&items[0][adults]=2&items[0][children]=0&items[0][infants]=0&currency=USD&checkInDate=2026-04-16&checkOutDate=2026-04-17&trackPage=yes" },
+  { label: "Contact Us", href: "https://direct-book.com/properties/luxurygardenpalace/contact?locale=en" },
 ];
 
 function HeaderLogo({ isScrolled = false, menuVersion = false }) {
@@ -60,13 +60,12 @@ function HeaderLogo({ isScrolled = false, menuVersion = false }) {
       <img
         src={LOGO_SRC}
         alt="Luxury Hotel Logo"
-        className={`w-auto object-contain transition-all duration-300 drop-shadow-[0_8px_24px_rgba(0,0,0,0.55)] ${
-          menuVersion
+        className={`w-auto object-contain transition-all duration-300 drop-shadow-[0_8px_24px_rgba(0,0,0,0.55)] ${menuVersion
             ? "h-[62px] max-w-[250px] sm:h-[72px] md:h-[72px]"
             : isScrolled
-            ? "h-[118px] max-w-[420px] md:h-[72px] lg:h-[82px]"
-            : "h-[150px] max-w-[520px] md:h-[84px] lg:h-[96px]"
-        }`}
+              ? "h-[118px] max-w-[420px] md:h-[72px] lg:h-[82px]"
+              : "h-[150px] max-w-[520px] md:h-[84px] lg:h-[96px]"
+          }`}
       />
     </a>
   );
@@ -104,6 +103,10 @@ export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [comingSoonOpen, setComingSoonOpen] = useState(false);
   const [comingSoonTitle, setComingSoonTitle] = useState("");
+
+  const location = useLocation();
+  const solidHeaderPages = ["/gallery"]; // 👈 add more pages here if needed
+  const isSolidPage = solidHeaderPages.includes(location.pathname);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -171,17 +174,20 @@ export default function Header() {
   return (
     <>
       <header
-        className={`fixed left-0 right-0 z-[55] transition-all duration-300 ${
-          isScrolled ? "top-0 md:top-[76px]" : "top-[56px] md:top-[76px]"
-        } ${isScrolled ? "bg-[#1d3335] shadow-lg" : "bg-transparent"}`}
+        className={`fixed left-0 right-0 z-[55] transition-all duration-300 ${isScrolled || isSolidPage
+            ? "top-0 md:top-[76px]"
+            : "top-[56px] md:top-[76px]"
+          } ${isScrolled || isSolidPage
+            ? "bg-[#1d3335] shadow-lg"
+            : "bg-transparent"
+          }`}
       >
         <div className="mx-auto max-w-[1600px] px-4 md:px-8 lg:px-12">
           <div
-            className={`flex items-center justify-center md:justify-between transition-all duration-300 ${
-              isScrolled
+            className={`flex items-center justify-center md:justify-between transition-all duration-300 ${isScrolled
                 ? "min-h-[124px] md:min-h-[104px]"
                 : "min-h-[170px] md:min-h-[144px]"
-            }`}
+              }`}
           >
             <div className="flex justify-center md:block">
               <HeaderLogo isScrolled={isScrolled} />
@@ -228,7 +234,6 @@ export default function Header() {
               <button
                 onClick={() => setMenuOpen(true)}
                 className="flex flex-col items-center text-white"
-                aria-label="Open menu"
               >
                 <span className="mb-3 flex flex-col gap-[6px]">
                   <span className="block h-[2px] w-11 bg-[#c5ad86]" />
@@ -245,24 +250,21 @@ export default function Header() {
       </header>
 
       <div
-        className={`fixed inset-0 z-[90] transition-all duration-500 ${
-          menuOpen
+        className={`fixed inset-0 z-[90] transition-all duration-500 ${menuOpen
             ? "pointer-events-auto opacity-100"
             : "pointer-events-none opacity-0"
-        }`}
+          }`}
       >
         <button
           aria-label="Close menu overlay"
           onClick={() => setMenuOpen(false)}
-          className={`absolute inset-0 bg-black/35 transition-opacity duration-500 ${
-            menuOpen ? "opacity-100" : "opacity-0"
-          }`}
+          className={`absolute inset-0 bg-black/35 transition-opacity duration-500 ${menuOpen ? "opacity-100" : "opacity-0"
+            }`}
         />
 
         <div
-          className={`absolute right-0 top-0 h-full w-[80%] md:w-[60%] lg:w-[45%] xl:w-[40%] transform overflow-hidden bg-[#062f33] transition-transform duration-500 ${
-            menuOpen ? "translate-x-0" : "translate-x-full"
-          }`}
+          className={`absolute right-0 top-0 h-full w-[80%] md:w-[60%] lg:w-[45%] xl:w-[40%] transform overflow-hidden bg-[#062f33] transition-transform duration-500 ${menuOpen ? "translate-x-0" : "translate-x-full"
+            }`}
         >
           <div
             className="absolute inset-0"
@@ -333,11 +335,10 @@ export default function Header() {
       </div>
 
       <div
-        className={`fixed inset-0 z-[120] transition-all duration-300 ${
-          comingSoonOpen
+        className={`fixed inset-0 z-[120] transition-all duration-300 ${comingSoonOpen
             ? "pointer-events-auto opacity-100"
             : "pointer-events-none opacity-0"
-        }`}
+          }`}
       >
         <button
           type="button"

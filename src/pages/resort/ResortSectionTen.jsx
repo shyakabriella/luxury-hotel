@@ -35,6 +35,7 @@ export default function ResortSectionTen() {
 
   return (
     <section
+      id="parking"
       ref={sectionRef}
       className="w-full bg-[#efeee8] py-8 md:py-10 overflow-hidden"
       style={{ fontFamily: "Montserrat, sans-serif" }}
