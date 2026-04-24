@@ -40,10 +40,18 @@ export default function Restaurant() {
     phone: "",
     email: "",
     customDish: "",
+    notes: "",
+    bookingDate: "",
+    bookingTime: "",
+    partySize: "",
   });
 
   const [paymentMethod, setPaymentMethod] = useState("counter");
   const [cart, setCart] = useState([]);
+
+  const [bookingLoading, setBookingLoading] = useState(false);
+  const [bookingError, setBookingError] = useState("");
+  const [bookingSuccess, setBookingSuccess] = useState(null);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -117,6 +125,9 @@ export default function Restaurant() {
   };
 
   const addOne = (menuItem) => {
+    setBookingError("");
+    setBookingSuccess(null);
+
     setCart((prev) => {
       const found = prev.find((item) => item.id === menuItem.id);
 
@@ -156,65 +167,115 @@ export default function Restaurant() {
 
   const handleCustomerChange = (e) => {
     const { name, value } = e.target;
+    setBookingError("");
+    setBookingSuccess(null);
+
     setCustomer((prev) => ({
       ...prev,
       [name]: value,
     }));
   };
 
-  const handleBuyNow = () => {
-    if (!customer.fullName || !customer.phone) {
-      alert("Please fill in your full name and phone number.");
-      return;
-    }
-
-    if (cart.length === 0) {
-      alert("Please add at least one item to your order.");
-      return;
-    }
-
-    const payload = {
-      order_type: "buy_now",
-      payment_method: paymentMethod,
-      customer,
-      items: cart.map((item) => ({
-        menu_item_id: item.id,
-        name: item.name,
-        quantity: item.quantity,
-        unit_price: item.price,
-        total_price: Number(item.price) * item.quantity,
-      })),
-      subtotal,
-      total,
-    };
-
-    console.log("BUY NOW PAYLOAD:", payload);
-    alert("Menu is integrated. Next step is booking/payment backend connection.");
+  const resetFormAfterSuccess = () => {
+    setCart([]);
+    setCustomer({
+      fullName: "",
+      phone: "",
+      email: "",
+      customDish: "",
+      notes: "",
+      bookingDate: "",
+      bookingTime: "",
+      partySize: "",
+    });
+    setPaymentMethod("counter");
   };
 
-  const handleBookTable = () => {
-    if (!customer.fullName || !customer.phone) {
-      alert("Please complete your details first.");
-      return;
+  const createBooking = async (bookingType) => {
+    try {
+      setBookingError("");
+      setBookingSuccess(null);
+
+      if (!customer.fullName || !customer.phone) {
+        setBookingError("Please fill in your full name and phone number.");
+        return;
+      }
+
+      if (cart.length === 0) {
+        setBookingError("Please add at least one item to your order.");
+        return;
+      }
+
+      if (!API_BASE_URL) {
+        setBookingError("API base URL is missing in .env");
+        return;
+      }
+
+      setBookingLoading(true);
+
+      const payload = {
+        customer_name: customer.fullName,
+        phone: customer.phone,
+        email: customer.email || null,
+        booking_type: bookingType,
+        payment_method: paymentMethod,
+        booking_date: customer.bookingDate || null,
+        booking_time: customer.bookingTime || null,
+        party_size: customer.partySize ? Number(customer.partySize) : null,
+        custom_dish: customer.customDish || null,
+        notes: customer.notes || null,
+        items: cart.map((item) => ({
+          restaurant_menu_item_id: item.id,
+          item_name: item.name,
+          quantity: item.quantity,
+          unit_price: Number(item.price),
+        })),
+      };
+
+      const response = await fetch(`${API_BASE_URL}/restaurant-bookings`, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        if (result?.errors) {
+          const firstKey = Object.keys(result.errors)[0];
+          const firstError = result.errors[firstKey]?.[0];
+          throw new Error(firstError || "Failed to create booking.");
+        }
+
+        throw new Error(result?.message || "Failed to create booking.");
+      }
+
+      setBookingSuccess({
+        message:
+          result?.message ||
+          (bookingType === "buy_now"
+            ? "Order created successfully."
+            : "Table booking created successfully."),
+        bookingCode: result?.data?.booking_code || "",
+      });
+
+      resetFormAfterSuccess();
+    } catch (error) {
+      setBookingError(error.message || "Something went wrong while creating booking.");
+    } finally {
+      setBookingLoading(false);
     }
+  };
 
-    const payload = {
-      booking_type: "table",
-      payment_method: paymentMethod,
-      customer,
-      items: cart.map((item) => ({
-        menu_item_id: item.id,
-        name: item.name,
-        quantity: item.quantity,
-        unit_price: item.price,
-        total_price: Number(item.price) * item.quantity,
-      })),
-      subtotal,
-      total,
-    };
+  const handleBuyNow = async () => {
+    await createBooking("buy_now");
+  };
 
-    console.log("BOOK TABLE PAYLOAD:", payload);
-    alert("Menu is integrated. Next step is booking API connection.");
+  const handleBookTable = async () => {
+    await createBooking("table");
   };
 
   return (
@@ -440,6 +501,24 @@ export default function Restaurant() {
               </div>
 
               <div className="space-y-4 p-4">
+                {/* SUCCESS / ERROR */}
+                {bookingSuccess && (
+                  <div className="rounded-2xl border border-green-200 bg-green-50 p-3 text-[14px] text-green-700">
+                    <p className="font-semibold">{bookingSuccess.message}</p>
+                    {bookingSuccess.bookingCode ? (
+                      <p className="mt-1">
+                        Booking Code: <span className="font-semibold">{bookingSuccess.bookingCode}</span>
+                      </p>
+                    ) : null}
+                  </div>
+                )}
+
+                {bookingError && (
+                  <div className="rounded-2xl border border-red-200 bg-red-50 p-3 text-[14px] text-red-700">
+                    {bookingError}
+                  </div>
+                )}
+
                 {/* DETAILS */}
                 <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3.5">
                   <div className="mb-3 flex items-center gap-2">
@@ -485,6 +564,53 @@ export default function Restaurant() {
                         className="ml-3 w-full border-none bg-transparent text-[14px] outline-none placeholder:text-slate-400"
                       />
                     </div>
+
+                    <textarea
+                      name="notes"
+                      value={customer.notes}
+                      onChange={handleCustomerChange}
+                      rows={3}
+                      placeholder="Notes (optional)"
+                      className="w-full rounded-xl border border-slate-200 bg-white px-3 py-3 text-[14px] outline-none placeholder:text-slate-400"
+                    />
+                  </div>
+                </div>
+
+                {/* TABLE BOOKING DETAILS */}
+                <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3.5">
+                  <div className="mb-3 flex items-center gap-2">
+                    <CalendarDays size={18} className="text-slate-600" />
+                    <h3 className="text-[17px] font-semibold text-slate-900">
+                      Table booking info
+                    </h3>
+                  </div>
+
+                  <div className="space-y-2.5">
+                    <input
+                      type="date"
+                      name="bookingDate"
+                      value={customer.bookingDate}
+                      onChange={handleCustomerChange}
+                      className="h-12 w-full rounded-xl border border-slate-200 bg-white px-3 text-[14px] outline-none"
+                    />
+
+                    <input
+                      type="time"
+                      name="bookingTime"
+                      value={customer.bookingTime}
+                      onChange={handleCustomerChange}
+                      className="h-12 w-full rounded-xl border border-slate-200 bg-white px-3 text-[14px] outline-none"
+                    />
+
+                    <input
+                      type="number"
+                      min="1"
+                      name="partySize"
+                      value={customer.partySize}
+                      onChange={handleCustomerChange}
+                      placeholder="Party size"
+                      className="h-12 w-full rounded-xl border border-slate-200 bg-white px-3 text-[14px] outline-none"
+                    />
                   </div>
                 </div>
 
@@ -603,26 +729,30 @@ export default function Restaurant() {
                 {/* ACTION BUTTONS */}
                 <button
                   onClick={handleBuyNow}
-                  className="flex h-12 w-full items-center justify-center gap-2 rounded-xl text-[16px] font-medium text-white transition"
+                  disabled={bookingLoading}
+                  className="flex h-12 w-full items-center justify-center gap-2 rounded-xl text-[16px] font-medium text-white transition disabled:cursor-not-allowed disabled:opacity-70"
                   style={{ backgroundColor: BRAND_GOLD }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = BRAND_GOLD_DARK;
+                    if (!bookingLoading) {
+                      e.currentTarget.style.backgroundColor = BRAND_GOLD_DARK;
+                    }
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.backgroundColor = BRAND_GOLD;
                   }}
                 >
                   <BadgeDollarSign size={18} />
-                  Buy Now
+                  {bookingLoading ? "Processing..." : "Buy Now"}
                 </button>
 
                 <button
                   onClick={handleBookTable}
-                  className="flex h-12 w-full items-center justify-center gap-2 rounded-xl border text-[16px] font-medium transition hover:bg-slate-50"
+                  disabled={bookingLoading}
+                  className="flex h-12 w-full items-center justify-center gap-2 rounded-xl border text-[16px] font-medium transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-70"
                   style={{ borderColor: BRAND_GOLD, color: BRAND_GOLD_DARK }}
                 >
                   <CalendarDays size={18} />
-                  Book Table
+                  {bookingLoading ? "Processing..." : "Book Table"}
                 </button>
               </div>
             </div>
