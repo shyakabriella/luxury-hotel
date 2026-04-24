@@ -15,10 +15,11 @@ export default function Sitemap() {
         { name: "Careers", path: "/careers" },
 
         // NEW PLACEHOLDERS (not active routes)
-        { name: "Wedding", path: "#" },
-        { name: "Restaurant", path: "#" },
-        { name: "Meetings", path: "#" },
-        { name: "Gym", path: "#" },
+        { name: "Wedding", path: "/weddings" },
+        { name: "Restaurant", path: "/restaurant" },
+        { name: "Meetings", path: "/meeting" },
+        { name: "Gym", path: "/gym" },
+        { name: "Gallery", path: "/gallery" },
       ],
     },
     {
