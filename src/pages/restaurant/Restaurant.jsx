@@ -64,6 +64,7 @@ export default function Restaurant() {
   const [menuError, setMenuError] = useState("");
 
   const [selectedItem, setSelectedItem] = useState(null);
+  const [checkoutMode, setCheckoutMode] = useState(null);
 
   const [customer, setCustomer] = useState({
     fullName: "",
@@ -145,16 +146,21 @@ export default function Restaurant() {
 
   const filteredItems = useMemo(() => {
     return menuItems.filter((item) => {
-      const matchesCategory =
-        activeCategory === "All" || item.category === activeCategory;
-
-      return matchesCategory;
+      return activeCategory === "All" || item.category === activeCategory;
     });
   }, [menuItems, activeCategory]);
 
+  const subtotal = useMemo(() => {
+    return cart.reduce(
+      (sum, item) => sum + Number(item.price) * item.quantity,
+      0
+    );
+  }, [cart]);
+
+  const total = subtotal;
+
   const getItemQty = (id) => {
     const found = cart.find((item) => item.id === id);
-
     return found ? found.quantity : 0;
   };
 
@@ -200,15 +206,6 @@ export default function Restaurant() {
     setSelectedItem(null);
   };
 
-  const subtotal = useMemo(() => {
-    return cart.reduce(
-      (sum, item) => sum + Number(item.price) * item.quantity,
-      0
-    );
-  }, [cart]);
-
-  const total = subtotal;
-
   const handleCustomerChange = (e) => {
     const { name, value } = e.target;
 
@@ -238,23 +235,42 @@ export default function Restaurant() {
     setPaymentMethod("counter");
   };
 
-  const createBooking = async (bookingType) => {
+  const openCheckoutModal = (mode) => {
+    setBookingError("");
+    setBookingSuccess(null);
+
+    if (cart.length === 0) {
+      setBookingError("Please add at least one item to your order.");
+      return;
+    }
+
+    setCheckoutMode(mode);
+  };
+
+  const createBooking = async () => {
     try {
       setBookingError("");
       setBookingSuccess(null);
+
+      if (!checkoutMode) {
+        setBookingError("Please choose Buy Now or Book Table.");
+        return;
+      }
 
       if (!customer.fullName || !customer.phone) {
         setBookingError("Please fill in your full name and phone number.");
         return;
       }
 
-      if (cart.length === 0) {
-        setBookingError("Please add at least one item to your order.");
-        return;
+      if (checkoutMode === "table") {
+        if (!customer.bookingDate || !customer.bookingTime || !customer.partySize) {
+          setBookingError("Please fill table booking date, time, and party size.");
+          return;
+        }
       }
 
-      if (!API_BASE_URL) {
-        setBookingError("API base URL is missing in .env");
+      if (cart.length === 0) {
+        setBookingError("Please add at least one item to your order.");
         return;
       }
 
@@ -264,7 +280,7 @@ export default function Restaurant() {
         customer_name: customer.fullName,
         phone: customer.phone,
         email: customer.email || null,
-        booking_type: bookingType,
+        booking_type: checkoutMode,
         payment_method: paymentMethod,
         booking_date: customer.bookingDate || null,
         booking_time: customer.bookingTime || null,
@@ -304,12 +320,13 @@ export default function Restaurant() {
       setBookingSuccess({
         message:
           result?.message ||
-          (bookingType === "buy_now"
+          (checkoutMode === "buy_now"
             ? "Order created successfully."
             : "Table booking created successfully."),
         bookingCode: result?.data?.booking_code || "",
       });
 
+      setCheckoutMode(null);
       resetFormAfterSuccess();
     } catch (error) {
       setBookingError(
@@ -318,14 +335,6 @@ export default function Restaurant() {
     } finally {
       setBookingLoading(false);
     }
-  };
-
-  const handleBuyNow = async () => {
-    await createBooking("buy_now");
-  };
-
-  const handleBookTable = async () => {
-    await createBooking("table");
   };
 
   return (
@@ -474,7 +483,6 @@ export default function Restaurant() {
                         key={item.id}
                         className="overflow-hidden rounded-[22px] border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
                       >
-                        {/* IMAGE */}
                         <button
                           type="button"
                           onClick={() => setSelectedItem(item)}
@@ -496,7 +504,6 @@ export default function Restaurant() {
                           </div>
                         </button>
 
-                        {/* NAME + PRICE ONLY */}
                         <div className="p-4">
                           <div className="flex items-start justify-between gap-3">
                             <h3 className="text-[15px] font-bold leading-tight text-slate-900">
@@ -562,7 +569,6 @@ export default function Restaurant() {
               </div>
 
               <div className="space-y-4 p-4">
-                {/* SUCCESS / ERROR */}
                 {bookingSuccess && (
                   <div className="rounded-2xl border border-green-200 bg-green-50 p-3 text-[14px] text-green-700">
                     <p className="font-semibold">{bookingSuccess.message}</p>
@@ -584,150 +590,6 @@ export default function Restaurant() {
                   </div>
                 )}
 
-                {/* DETAILS */}
-                <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3.5">
-                  <div className="mb-3 flex items-center gap-2">
-                    <User size={18} className="text-slate-600" />
-
-                    <h3 className="text-[17px] font-semibold text-slate-900">
-                      Your details
-                    </h3>
-                  </div>
-
-                  <div className="space-y-2.5">
-                    <div className="flex h-12 items-center rounded-xl border border-slate-200 bg-white px-3">
-                      <User size={16} className="text-slate-400" />
-
-                      <input
-                        type="text"
-                        name="fullName"
-                        value={customer.fullName}
-                        onChange={handleCustomerChange}
-                        placeholder="Full name"
-                        className="ml-3 w-full border-none bg-transparent text-[14px] outline-none placeholder:text-slate-400"
-                      />
-                    </div>
-
-                    <div className="flex h-12 items-center rounded-xl border border-slate-200 bg-white px-3">
-                      <Phone size={16} className="text-slate-400" />
-
-                      <input
-                        type="text"
-                        name="phone"
-                        value={customer.phone}
-                        onChange={handleCustomerChange}
-                        placeholder="Phone number"
-                        className="ml-3 w-full border-none bg-transparent text-[14px] outline-none placeholder:text-slate-400"
-                      />
-                    </div>
-
-                    <div className="flex h-12 items-center rounded-xl border border-slate-200 bg-white px-3">
-                      <Mail size={16} className="text-slate-400" />
-
-                      <input
-                        type="email"
-                        name="email"
-                        value={customer.email}
-                        onChange={handleCustomerChange}
-                        placeholder="Email (optional)"
-                        className="ml-3 w-full border-none bg-transparent text-[14px] outline-none placeholder:text-slate-400"
-                      />
-                    </div>
-
-                    <textarea
-                      name="notes"
-                      value={customer.notes}
-                      onChange={handleCustomerChange}
-                      rows={3}
-                      placeholder="Notes (optional)"
-                      className="w-full rounded-xl border border-slate-200 bg-white px-3 py-3 text-[14px] outline-none placeholder:text-slate-400"
-                    />
-                  </div>
-                </div>
-
-                {/* TABLE BOOKING DETAILS */}
-                <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3.5">
-                  <div className="mb-3 flex items-center gap-2">
-                    <CalendarDays size={18} className="text-slate-600" />
-
-                    <h3 className="text-[17px] font-semibold text-slate-900">
-                      Table booking info
-                    </h3>
-                  </div>
-
-                  <div className="space-y-2.5">
-                    <input
-                      type="date"
-                      name="bookingDate"
-                      value={customer.bookingDate}
-                      onChange={handleCustomerChange}
-                      className="h-12 w-full rounded-xl border border-slate-200 bg-white px-3 text-[14px] outline-none"
-                    />
-
-                    <input
-                      type="time"
-                      name="bookingTime"
-                      value={customer.bookingTime}
-                      onChange={handleCustomerChange}
-                      className="h-12 w-full rounded-xl border border-slate-200 bg-white px-3 text-[14px] outline-none"
-                    />
-
-                    <input
-                      type="number"
-                      min="1"
-                      name="partySize"
-                      value={customer.partySize}
-                      onChange={handleCustomerChange}
-                      placeholder="Party size"
-                      className="h-12 w-full rounded-xl border border-slate-200 bg-white px-3 text-[14px] outline-none"
-                    />
-                  </div>
-                </div>
-
-                {/* PAYMENT */}
-                <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3.5">
-                  <div className="mb-3 flex items-center gap-2">
-                    <Wallet size={18} className="text-slate-600" />
-
-                    <h3 className="text-[17px] font-semibold text-slate-900">
-                      Payment
-                    </h3>
-                  </div>
-
-                  <div className="space-y-2.5">
-                    <label className="flex items-center gap-3 text-[15px] text-slate-800">
-                      <input
-                        type="radio"
-                        checked={paymentMethod === "counter"}
-                        onChange={() => setPaymentMethod("counter")}
-                      />
-
-                      <span>Pay at counter</span>
-                    </label>
-
-                    <label className="flex items-center gap-3 text-[15px] text-slate-800">
-                      <input
-                        type="radio"
-                        checked={paymentMethod === "room"}
-                        onChange={() => setPaymentMethod("room")}
-                      />
-
-                      <span>Charge to room</span>
-                    </label>
-
-                    <label className="flex items-center gap-3 text-[15px] text-slate-800">
-                      <input
-                        type="radio"
-                        checked={paymentMethod === "card"}
-                        onChange={() => setPaymentMethod("card")}
-                      />
-
-                      <span>Pay now</span>
-                    </label>
-                  </div>
-                </div>
-
-                {/* ORDER ITEMS */}
                 <div className="space-y-3">
                   {cart.length === 0 ? (
                     <div className="rounded-2xl border border-dashed border-slate-300 p-4 text-[14px] text-slate-500">
@@ -793,7 +655,6 @@ export default function Restaurant() {
                   )}
                 </div>
 
-                {/* TOTALS */}
                 <div className="space-y-1.5 border-t border-slate-200 pt-3">
                   <div className="flex items-center justify-between text-[15px] text-slate-700">
                     <span>Subtotal</span>
@@ -806,35 +667,24 @@ export default function Restaurant() {
                   </div>
                 </div>
 
-                {/* ACTION BUTTONS */}
                 <button
-                  onClick={handleBuyNow}
-                  disabled={bookingLoading}
-                  className="flex h-12 w-full items-center justify-center gap-2 rounded-xl text-[16px] font-medium text-white transition disabled:cursor-not-allowed disabled:opacity-70"
+                  onClick={() => openCheckoutModal("buy_now")}
+                  disabled={cart.length === 0}
+                  className="flex h-12 w-full items-center justify-center gap-2 rounded-xl text-[16px] font-medium text-white transition disabled:cursor-not-allowed disabled:opacity-50"
                   style={{ backgroundColor: BRAND_GOLD }}
-                  onMouseEnter={(e) => {
-                    if (!bookingLoading) {
-                      e.currentTarget.style.backgroundColor = BRAND_GOLD_DARK;
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = BRAND_GOLD;
-                  }}
                 >
                   <Wallet size={18} />
-
-                  {bookingLoading ? "Processing..." : "Buy Now"}
+                  Buy Now
                 </button>
 
                 <button
-                  onClick={handleBookTable}
-                  disabled={bookingLoading}
-                  className="flex h-12 w-full items-center justify-center gap-2 rounded-xl border text-[16px] font-medium transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-70"
+                  onClick={() => openCheckoutModal("table")}
+                  disabled={cart.length === 0}
+                  className="flex h-12 w-full items-center justify-center gap-2 rounded-xl border text-[16px] font-medium transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
                   style={{ borderColor: BRAND_GOLD, color: BRAND_GOLD_DARK }}
                 >
                   <CalendarDays size={18} />
-
-                  {bookingLoading ? "Processing..." : "Book Table"}
+                  Book Table
                 </button>
               </div>
             </div>
@@ -922,6 +772,196 @@ export default function Restaurant() {
           </div>
         </div>
       )}
+
+      {/* CHECKOUT MODAL */}
+      {checkoutMode && (
+        <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/60 px-4 py-6">
+          <div className="relative max-h-[90vh] w-full max-w-[640px] overflow-y-auto rounded-[24px] bg-white p-5 shadow-2xl md:p-6">
+            <button
+              type="button"
+              onClick={() => setCheckoutMode(null)}
+              className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 text-slate-600 transition hover:bg-slate-200"
+            >
+              <X size={18} />
+            </button>
+
+            <div className="pr-10">
+              <p
+                className="text-xs font-bold uppercase tracking-[0.2em]"
+                style={{ color: BRAND_GOLD_DARK }}
+              >
+                {checkoutMode === "buy_now" ? "Buy Now" : "Book Table"}
+              </p>
+
+              <h2 className="mt-2 text-2xl font-bold text-slate-950">
+                Complete your details
+              </h2>
+
+              <p className="mt-1 text-sm text-slate-500">
+                Your order total is{" "}
+                <span className="font-bold text-sky-700">{money(total)}</span>
+              </p>
+            </div>
+
+            {bookingError && (
+              <div className="mt-4 rounded-2xl border border-red-200 bg-red-50 p-3 text-sm font-semibold text-red-700">
+                {bookingError}
+              </div>
+            )}
+
+            <div className="mt-5 grid gap-4 md:grid-cols-2">
+              <InputField
+                icon={<User size={16} />}
+                name="fullName"
+                value={customer.fullName}
+                onChange={handleCustomerChange}
+                placeholder="Full name"
+              />
+
+              <InputField
+                icon={<Phone size={16} />}
+                name="phone"
+                value={customer.phone}
+                onChange={handleCustomerChange}
+                placeholder="Phone number"
+              />
+
+              <InputField
+                icon={<Mail size={16} />}
+                type="email"
+                name="email"
+                value={customer.email}
+                onChange={handleCustomerChange}
+                placeholder="Email optional"
+              />
+
+              <div className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-3">
+                <p className="mb-2 text-sm font-bold text-slate-800">
+                  Payment
+                </p>
+
+                <div className="space-y-2 text-sm text-slate-700">
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="radio"
+                      checked={paymentMethod === "counter"}
+                      onChange={() => setPaymentMethod("counter")}
+                    />
+                    Pay at counter
+                  </label>
+
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="radio"
+                      checked={paymentMethod === "room"}
+                      onChange={() => setPaymentMethod("room")}
+                    />
+                    Charge to room
+                  </label>
+
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="radio"
+                      checked={paymentMethod === "card"}
+                      onChange={() => setPaymentMethod("card")}
+                    />
+                    Pay now
+                  </label>
+                </div>
+              </div>
+
+              {checkoutMode === "table" && (
+                <>
+                  <InputField
+                    type="date"
+                    name="bookingDate"
+                    value={customer.bookingDate}
+                    onChange={handleCustomerChange}
+                  />
+
+                  <InputField
+                    type="time"
+                    name="bookingTime"
+                    value={customer.bookingTime}
+                    onChange={handleCustomerChange}
+                  />
+
+                  <InputField
+                    type="number"
+                    min="1"
+                    name="partySize"
+                    value={customer.partySize}
+                    onChange={handleCustomerChange}
+                    placeholder="Party size"
+                  />
+                </>
+              )}
+
+              <textarea
+                name="notes"
+                value={customer.notes}
+                onChange={handleCustomerChange}
+                rows={3}
+                placeholder="Notes optional"
+                className="rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none md:col-span-2"
+              />
+            </div>
+
+            <div className="mt-5 rounded-2xl bg-slate-50 p-4">
+              <div className="flex items-center justify-between text-sm text-slate-600">
+                <span>{cart.length} item line(s)</span>
+                <span className="font-bold text-slate-950">{money(total)}</span>
+              </div>
+            </div>
+
+            <div className="mt-5 flex flex-col gap-3 sm:flex-row">
+              <button
+                type="button"
+                onClick={() => setCheckoutMode(null)}
+                className="inline-flex flex-1 items-center justify-center rounded-2xl border border-slate-200 px-5 py-3 text-sm font-bold text-slate-700 transition hover:bg-slate-50"
+              >
+                Cancel
+              </button>
+
+              <button
+                type="button"
+                onClick={createBooking}
+                disabled={bookingLoading}
+                className="inline-flex flex-1 items-center justify-center gap-2 rounded-2xl px-5 py-3 text-sm font-bold text-white transition disabled:cursor-not-allowed disabled:opacity-70"
+                style={{ backgroundColor: BRAND_GOLD }}
+              >
+                {bookingLoading ? "Processing..." : "Confirm"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
+  );
+}
+
+function InputField({
+  icon,
+  type = "text",
+  name,
+  value,
+  onChange,
+  placeholder,
+  min,
+}) {
+  return (
+    <div className="flex h-12 items-center rounded-xl border border-slate-200 bg-white px-3">
+      {icon && <span className="text-slate-400">{icon}</span>}
+
+      <input
+        type={type}
+        min={min}
+        name={name}
+        value={value}
+        onChange={onChange}
+        placeholder={placeholder}
+        className={`${icon ? "ml-3" : ""} w-full border-none bg-transparent text-sm outline-none placeholder:text-slate-400`}
+      />
+    </div>
   );
 }
