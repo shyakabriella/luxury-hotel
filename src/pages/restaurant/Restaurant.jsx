@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
 import {
-  BadgeDollarSign,
   CalendarDays,
   Mail,
   Minus,
@@ -22,7 +21,14 @@ const fallbackImage =
 const BRAND_GOLD = "#b4945a";
 const BRAND_GOLD_DARK = "#9f8045";
 
-const money = (value) => `$${Number(value || 0).toFixed(2)}`;
+const money = (value) => {
+  const amount = Number(value || 0);
+
+  return `RWF ${amount.toLocaleString("en-RW", {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  })}`;
+};
 
 export default function Restaurant() {
   const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
@@ -69,7 +75,7 @@ export default function Restaurant() {
               Accept: "application/json",
             },
             signal: controller.signal,
-          },
+          }
         );
 
         const result = await response.json();
@@ -106,7 +112,10 @@ export default function Restaurant() {
   }, [API_BASE_URL, activeTab]);
 
   const categories = useMemo(() => {
-    const unique = [...new Set(menuItems.map((item) => item.category).filter(Boolean))];
+    const unique = [
+      ...new Set(menuItems.map((item) => item.category).filter(Boolean)),
+    ];
+
     return ["All", ...unique];
   }, [menuItems]);
 
@@ -121,6 +130,7 @@ export default function Restaurant() {
 
   const getItemQty = (id) => {
     const found = cart.find((item) => item.id === id);
+
     return found ? found.quantity : 0;
   };
 
@@ -135,7 +145,7 @@ export default function Restaurant() {
         return prev.map((item) =>
           item.id === menuItem.id
             ? { ...item, quantity: item.quantity + 1 }
-            : item,
+            : item
         );
       }
 
@@ -149,9 +159,9 @@ export default function Restaurant() {
         .map((item) =>
           item.id === menuItem.id
             ? { ...item, quantity: item.quantity - 1 }
-            : item,
+            : item
         )
-        .filter((item) => item.quantity > 0),
+        .filter((item) => item.quantity > 0)
     );
   };
 
@@ -160,13 +170,17 @@ export default function Restaurant() {
   };
 
   const subtotal = useMemo(() => {
-    return cart.reduce((sum, item) => sum + Number(item.price) * item.quantity, 0);
+    return cart.reduce(
+      (sum, item) => sum + Number(item.price) * item.quantity,
+      0
+    );
   }, [cart]);
 
   const total = subtotal;
 
   const handleCustomerChange = (e) => {
     const { name, value } = e.target;
+
     setBookingError("");
     setBookingSuccess(null);
 
@@ -178,6 +192,7 @@ export default function Restaurant() {
 
   const resetFormAfterSuccess = () => {
     setCart([]);
+
     setCustomer({
       fullName: "",
       phone: "",
@@ -188,6 +203,7 @@ export default function Restaurant() {
       bookingTime: "",
       partySize: "",
     });
+
     setPaymentMethod("counter");
   };
 
@@ -247,6 +263,7 @@ export default function Restaurant() {
         if (result?.errors) {
           const firstKey = Object.keys(result.errors)[0];
           const firstError = result.errors[firstKey]?.[0];
+
           throw new Error(firstError || "Failed to create booking.");
         }
 
@@ -264,7 +281,9 @@ export default function Restaurant() {
 
       resetFormAfterSuccess();
     } catch (error) {
-      setBookingError(error.message || "Something went wrong while creating booking.");
+      setBookingError(
+        error.message || "Something went wrong while creating booking."
+      );
     } finally {
       setBookingLoading(false);
     }
@@ -290,17 +309,21 @@ export default function Restaurant() {
           alt="Restaurant banner"
           className="h-full w-full object-cover"
         />
+
         <div className="absolute inset-0 bg-[#0f4c81]/55" />
+
         <div className="absolute inset-0 flex items-center">
           <div className="mx-auto w-full max-w-[1500px] px-4 md:px-6 lg:px-8">
             <div className="max-w-[760px] text-white">
               <p className="text-[11px] uppercase tracking-[0.28em] text-white/90">
                 Restaurant • Bar • Order • Booking
               </p>
+
               <h1 className="mt-3 flex items-center gap-3 text-[24px] font-semibold md:text-[40px]">
                 <UtensilsCrossed size={32} className="shrink-0" />
                 <span>Restaurant — Order &amp; Book</span>
               </h1>
+
               <p className="mt-3 text-[14px] leading-[1.8] text-white/90 md:text-[16px]">
                 Choose from our menu, add a custom request, and either buy now
                 or reserve a table.
@@ -436,6 +459,7 @@ export default function Restaurant() {
                                 <h3 className="text-[14px] font-semibold leading-tight text-slate-900 sm:text-[15px]">
                                   {item.name}
                                 </h3>
+
                                 <span className="text-[14px] font-semibold text-slate-900">
                                   {money(item.price)}
                                 </span>
@@ -495,6 +519,7 @@ export default function Restaurant() {
             <div className="rounded-[24px] border border-slate-200 bg-white shadow-sm">
               <div className="flex items-center gap-3 border-b border-slate-200 px-5 py-4">
                 <ShoppingCart size={22} className="text-sky-700" />
+
                 <h2 className="text-[20px] font-semibold text-slate-900">
                   Your Order
                 </h2>
@@ -505,9 +530,13 @@ export default function Restaurant() {
                 {bookingSuccess && (
                   <div className="rounded-2xl border border-green-200 bg-green-50 p-3 text-[14px] text-green-700">
                     <p className="font-semibold">{bookingSuccess.message}</p>
+
                     {bookingSuccess.bookingCode ? (
                       <p className="mt-1">
-                        Booking Code: <span className="font-semibold">{bookingSuccess.bookingCode}</span>
+                        Booking Code:{" "}
+                        <span className="font-semibold">
+                          {bookingSuccess.bookingCode}
+                        </span>
                       </p>
                     ) : null}
                   </div>
@@ -523,6 +552,7 @@ export default function Restaurant() {
                 <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3.5">
                   <div className="mb-3 flex items-center gap-2">
                     <User size={18} className="text-slate-600" />
+
                     <h3 className="text-[17px] font-semibold text-slate-900">
                       Your details
                     </h3>
@@ -531,6 +561,7 @@ export default function Restaurant() {
                   <div className="space-y-2.5">
                     <div className="flex h-12 items-center rounded-xl border border-slate-200 bg-white px-3">
                       <User size={16} className="text-slate-400" />
+
                       <input
                         type="text"
                         name="fullName"
@@ -543,6 +574,7 @@ export default function Restaurant() {
 
                     <div className="flex h-12 items-center rounded-xl border border-slate-200 bg-white px-3">
                       <Phone size={16} className="text-slate-400" />
+
                       <input
                         type="text"
                         name="phone"
@@ -555,6 +587,7 @@ export default function Restaurant() {
 
                     <div className="flex h-12 items-center rounded-xl border border-slate-200 bg-white px-3">
                       <Mail size={16} className="text-slate-400" />
+
                       <input
                         type="email"
                         name="email"
@@ -580,6 +613,7 @@ export default function Restaurant() {
                 <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3.5">
                   <div className="mb-3 flex items-center gap-2">
                     <CalendarDays size={18} className="text-slate-600" />
+
                     <h3 className="text-[17px] font-semibold text-slate-900">
                       Table booking info
                     </h3>
@@ -618,6 +652,7 @@ export default function Restaurant() {
                 <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3.5">
                   <div className="mb-3 flex items-center gap-2">
                     <Wallet size={18} className="text-slate-600" />
+
                     <h3 className="text-[17px] font-semibold text-slate-900">
                       Payment
                     </h3>
@@ -630,6 +665,7 @@ export default function Restaurant() {
                         checked={paymentMethod === "counter"}
                         onChange={() => setPaymentMethod("counter")}
                       />
+
                       <span>Pay at counter</span>
                     </label>
 
@@ -639,6 +675,7 @@ export default function Restaurant() {
                         checked={paymentMethod === "room"}
                         onChange={() => setPaymentMethod("room")}
                       />
+
                       <span>Charge to room</span>
                     </label>
 
@@ -648,7 +685,8 @@ export default function Restaurant() {
                         checked={paymentMethod === "card"}
                         onChange={() => setPaymentMethod("card")}
                       />
-                      <span>Pay now (card)</span>
+
+                      <span>Pay now</span>
                     </label>
                   </div>
                 </div>
@@ -677,6 +715,7 @@ export default function Restaurant() {
                           <h4 className="truncate text-[14px] font-semibold text-slate-900">
                             {item.name}
                           </h4>
+
                           <p className="text-[12px] text-slate-500">
                             {money(item.price)}
                           </p>
@@ -690,9 +729,11 @@ export default function Restaurant() {
                             >
                               <Minus size={14} />
                             </button>
+
                             <span className="min-w-[26px] text-center text-[14px]">
                               {item.quantity}
                             </span>
+
                             <button
                               onClick={() => addOne(item)}
                               className="flex h-8 w-8 items-center justify-center hover:bg-slate-50"
@@ -741,7 +782,8 @@ export default function Restaurant() {
                     e.currentTarget.style.backgroundColor = BRAND_GOLD;
                   }}
                 >
-                  <BadgeDollarSign size={18} />
+                  <Wallet size={18} />
+
                   {bookingLoading ? "Processing..." : "Buy Now"}
                 </button>
 
@@ -752,6 +794,7 @@ export default function Restaurant() {
                   style={{ borderColor: BRAND_GOLD, color: BRAND_GOLD_DARK }}
                 >
                   <CalendarDays size={18} />
+
                   {bookingLoading ? "Processing..." : "Book Table"}
                 </button>
               </div>
