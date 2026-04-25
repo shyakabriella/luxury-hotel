@@ -1,111 +1,185 @@
-import React, { useEffect, useState } from "react";
-import homeeight from "../../assets/homepage/homeeight.jpg";
-import homenine from "../../assets/homepage/homenine.png";
-import homeone from "../../assets/homepage/homeone.png";
-import hometen from "../../assets/homepage/hometen.png";
-import homeEleven from "../../assets/homepage/welcomeToWedding.jpeg";
-import MassageOne from "../../assets/homepage/massage-sauna/massage-one.jpg";
-import MassageThree from "../../assets/homepage/massage-sauna/massage-three.jpg";
-import roomOne from "../../assets/homepage/room.jpg";
-import roomTwo from "../../assets/homepage/sallon.jpg";
-import gymOne from "../../assets/homepage/gym/gym-one.jpg";
-import gymTwo from "../../assets/homepage/gym/gym-two.jpg";
+import React, { useEffect, useRef, useState } from "react";
+import homeeight from "../../assets/homepage/homeseven.jpg";
 
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000/api";
 
-const slides = [
-  { image: homeeight, alt: "Resort view one" },
-  { image: gymTwo, alt: "Gym view two" },
-  { image: homenine, alt: "Resort view two" },
-  { image: gymOne, alt: "Gym view one" },
-  { image: MassageOne, alt: "Massage place" },
-  { image: homeone, alt: "Resort view three" },
-  { image: roomTwo, alt: "Resort view three" },
-  { image: hometen, alt: "Resort view four" },
-  { image: MassageThree, alt: "Another Massage place" },
-  { image: homeEleven, alt: "Resort view four" },
-  { image: roomOne, alt: "Resort view four" },
-];
+const API_ROOT_URL = API_BASE_URL.replace(/\/api\/?$/, "");
 
-export default function ResortSectionEight() {
-  const [current, setCurrent] = useState(0);
+const fallbackSection = {
+  eyebrow: "Luxury",
+  title: "The Lay Of The Land",
+  description:
+    "Discover vibrant event spaces, outdoor stages, and elegant venues across a fully equipped luxury property designed for celebration, connection, and unforgettable experiences.",
+  image: homeeight,
+  is_active: true,
+};
+
+function buildImageUrl(path) {
+  if (!path) return "";
+
+  if (path.startsWith("http://") || path.startsWith("https://")) {
+    return path;
+  }
+
+  if (path.startsWith("/storage/")) {
+    return `${API_ROOT_URL}${path}`;
+  }
+
+  if (path.startsWith("storage/")) {
+    return `${API_ROOT_URL}/${path}`;
+  }
+
+  return `${API_ROOT_URL}/storage/${path}`;
+}
+
+function toBoolean(value) {
+  return value === true || value === 1 || value === "1" || value === "true";
+}
+
+function getFirstItem(data) {
+  if (Array.isArray(data?.data)) return data.data[0] || null;
+  if (Array.isArray(data)) return data[0] || null;
+  if (data?.data) return data.data;
+  return data || null;
+}
+
+export default function ResortSectionSeven() {
+  const sectionRef = useRef(null);
+
+  const [show, setShow] = useState(false);
+  const [sectionData, setSectionData] = useState(fallbackSection);
+  const [hidden, setHidden] = useState(false);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrent((p) => (p + 1) % slides.length);
-    }, 4500);
-    return () => clearInterval(timer);
+    const fetchHomeSectionFive = async () => {
+      try {
+        let response = await fetch(`${API_BASE_URL}/home-section-fives/active`, {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+          },
+        });
+
+        let data = await response.json();
+
+        // Fallback if /active endpoint is not available
+        if (!response.ok) {
+          response = await fetch(`${API_BASE_URL}/home-section-fives`, {
+            method: "GET",
+            headers: {
+              Accept: "application/json",
+            },
+          });
+
+          data = await response.json();
+
+          if (!response.ok) {
+            throw new Error(data?.message || "Failed to load Home Section Five.");
+          }
+        }
+
+        const item = getFirstItem(data);
+
+        if (!item) return;
+
+        const isActive = toBoolean(item.is_active ?? true);
+
+        if (!isActive) {
+          setHidden(true);
+          return;
+        }
+
+        const imageValue = item.image_url || item.image || item.image_path || "";
+
+        setSectionData({
+          eyebrow: item.eyebrow || fallbackSection.eyebrow,
+          title: item.title || fallbackSection.title,
+          description: item.description || fallbackSection.description,
+          image: imageValue ? buildImageUrl(imageValue) : fallbackSection.image,
+          is_active: isActive,
+        });
+
+        setHidden(false);
+      } catch (error) {
+        console.error("Home Section Five error:", error);
+        setSectionData(fallbackSection);
+        setHidden(false);
+      }
+    };
+
+    fetchHomeSectionFive();
   }, []);
 
-  const goNext = () => setCurrent((p) => (p + 1) % slides.length);
-  const goPrev = () => setCurrent((p) => (p - 1 + slides.length) % slides.length);
+  useEffect(() => {
+    const currentSection = sectionRef.current;
 
-  const getRelativePosition = (index) => {
-    const total = slides.length;
-    let diff = index - current;
-    if (diff > total / 2) diff -= total;
-    if (diff < -total / 2) diff += total;
-    return diff;
-  };
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) setShow(true);
+      },
+      { threshold: 0.2 }
+    );
+
+    if (currentSection) observer.observe(currentSection);
+
+    return () => {
+      if (currentSection) observer.unobserve(currentSection);
+    };
+  }, []);
+
+  if (hidden) return null;
 
   return (
     <section
-      className="overflow-hidden bg-[#efeee8] py-8 md:py-10"
+      ref={sectionRef}
+      className="w-full overflow-hidden bg-[#efeee8] py-10 md:py-14 lg:py-16"
       style={{ fontFamily: "Montserrat, sans-serif" }}
     >
-      <div className="mx-auto max-w-[1400px] px-2 sm:px-4 md:px-6 lg:px-8">
-        <div className="relative h-[160px] sm:h-[220px] md:h-[280px] lg:h-[340px] xl:h-[380px]">
-
-          {slides.map((slide, index) => {
-            const position = getRelativePosition(index);
-
-            let className =
-              "absolute top-1/2 overflow-hidden transition-all duration-700 ease-in-out";
-
-            if (position === 0) {
-              className +=
-                " left-1/2 z-30 w-[55%] -translate-x-1/2 -translate-y-1/2 opacity-100 scale-100";
-            } else if (position === -1) {
-              className +=
-                " left-0 z-20 w-[18%] -translate-y-1/2 opacity-70 scale-[0.95]";
-            } else if (position === 1) {
-              className +=
-                " right-0 z-20 w-[18%] -translate-y-1/2 opacity-70 scale-[0.95]";
-            } else {
-              className +=
-                " pointer-events-none left-1/2 z-0 w-[15%] -translate-x-1/2 -translate-y-1/2 opacity-0 scale-90";
-            }
-
-            return (
-              <div key={slide.image} className={className}>
-                <img
-                  src={slide.image}
-                  alt={slide.alt}
-                  className={`h-[160px] rounded-md w-full object-cover sm:h-[220px] md:h-[280px] lg:h-[340px] xl:h-[380px] ${
-                    position === 0 ? "" : "blur-[0.8px]"
-                  }`}
-                />
-              </div>
-            );
-          })}
-
-          {/* Left arrow */}
-          <button
-            onClick={goPrev}
-            aria-label="Previous slide"
-            className="absolute left-[12%] top-1/2 z-40 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-[#b69a63] bg-[#efeee8]/80 text-[#b69a63] transition hover:bg-white md:h-10 md:w-10"
+      <div className="mx-auto max-w-[1200px] px-5 sm:px-6 md:px-8 lg:px-10">
+        <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-2 lg:gap-12">
+          {/* IMAGE */}
+          <div
+            className={`relative transition-all duration-700 ${
+              show ? "translate-x-0 opacity-100" : "-translate-x-10 opacity-0"
+            }`}
           >
-            ←
-          </button>
+            <img
+              src={sectionData.image}
+              alt={sectionData.title || "Resort landscape"}
+              className="h-[180px] w-full rounded-md object-cover sm:h-[240px] md:h-[300px] lg:h-[340px]"
+              onError={(e) => {
+                e.currentTarget.src = homeeight;
+              }}
+            />
+          </div>
 
-          {/* Right arrow */}
-          <button
-            onClick={goNext}
-            aria-label="Next slide"
-            className="absolute right-[12%] top-1/2 z-40 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-[#b69a63] bg-[#efeee8]/80 text-[#b69a63] transition hover:bg-white md:h-10 md:w-10"
+          {/* CONTENT */}
+          <div
+            className={`flex items-center justify-center transition-all duration-700 ${
+              show ? "translate-x-0 opacity-100" : "translate-x-10 opacity-0"
+            }`}
           >
-            →
-          </button>
+            <div className="max-w-[480px] text-center">
+              {sectionData.eyebrow && (
+                <p className="text-[13px] font-medium text-[#a17d5a] md:text-[15px]">
+                  {sectionData.eyebrow}
+                </p>
+              )}
 
+              {sectionData.title && (
+                <h2 className="mt-3 text-[20px] font-light leading-[1.05] text-[#1e3b3d] md:text-[22px] lg:text-[27px]">
+                  {sectionData.title}
+                </h2>
+              )}
+
+              {sectionData.description && (
+                <p className="mt-4 text-[14px] leading-[1.7] text-[#334243] md:text-[16px]">
+                  {sectionData.description}
+                </p>
+              )}
+            </div>
+          </div>
         </div>
       </div>
     </section>
