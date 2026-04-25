@@ -8,6 +8,8 @@ const API_ROOT_URL = API_BASE_URL.replace(/\/api\/?$/, "");
 function buildImageUrl(path) {
   if (!path) return "";
 
+  if (typeof path !== "string") return "";
+
   if (path.startsWith("http://") || path.startsWith("https://")) {
     return path;
   }
@@ -25,6 +27,10 @@ function buildImageUrl(path) {
 
 function toBoolean(value) {
   return value === true || value === 1 || value === "1" || value === "true";
+}
+
+function getApiPayload(data) {
+  return data?.data || data || {};
 }
 
 function normalizePage(page) {
@@ -48,9 +54,20 @@ function normalizePage(page) {
 }
 
 function normalizeItems(items = []) {
+  if (!Array.isArray(items)) return [];
+
   return items
     .filter((item) => toBoolean(item.is_active ?? true))
-    .sort((a, b) => Number(a.sort_order ?? 0) - Number(b.sort_order ?? 0))
+    .sort((a, b) => {
+      const sectionA = String(a.section || "");
+      const sectionB = String(b.section || "");
+
+      if (sectionA !== sectionB) {
+        return sectionA.localeCompare(sectionB);
+      }
+
+      return Number(a.sort_order ?? 0) - Number(b.sort_order ?? 0);
+    })
     .map((item) => ({
       id: item.id,
       section: item.section || "spa_service",
@@ -63,11 +80,17 @@ function normalizeItems(items = []) {
 }
 
 function normalizeBenefits(benefits = []) {
+  if (!Array.isArray(benefits)) return [];
+
   return benefits
     .filter((benefit) => toBoolean(benefit.is_active ?? true))
     .sort((a, b) => Number(a.sort_order ?? 0) - Number(b.sort_order ?? 0))
-    .map((benefit) => benefit.title)
-    .filter(Boolean);
+    .map((benefit) => ({
+      id: benefit.id,
+      title: benefit.title || "",
+      sort_order: Number(benefit.sort_order ?? 0),
+    }))
+    .filter((benefit) => benefit.title);
 }
 
 export default function MassageAndSpa() {
@@ -104,18 +127,11 @@ export default function MassageAndSpa() {
           throw new Error(data?.message || "Failed to load Massage & Spa.");
         }
 
-        const page = normalizePage(data?.data?.page || data?.page || null);
-        const apiItems = normalizeItems(data?.data?.items || data?.items || []);
-        const apiBenefits = normalizeBenefits(
-          data?.data?.benefits || data?.benefits || []
-        );
+        const payload = getApiPayload(data);
 
-        if (!page || !page.is_active) {
-          setPageData(null);
-          setItems([]);
-          setBenefits([]);
-          return;
-        }
+        const page = normalizePage(payload.page || null);
+        const apiItems = normalizeItems(payload.items || []);
+        const apiBenefits = normalizeBenefits(payload.benefits || []);
 
         setPageData(page);
         setItems(apiItems);
@@ -146,6 +162,19 @@ export default function MassageAndSpa() {
     return items.filter((item) => item.section === "wellness_enhancement");
   }, [items]);
 
+  const hasHero =
+    pageData?.hero_title || pageData?.hero_subtitle || pageData?.hero_image;
+
+  const hasIntro =
+    pageData?.intro_eyebrow ||
+    pageData?.intro_title ||
+    pageData?.intro_description;
+
+  const hasExperience =
+    pageData?.experience_title ||
+    pageData?.experience_description ||
+    pageData?.experience_image;
+
   const imgWrapper = "overflow-hidden rounded-md bg-slate-100";
   const imgClass =
     "h-[200px] w-full object-cover transition-transform duration-700 ease-out hover:scale-110 sm:h-[240px] md:h-[260px]";
@@ -169,21 +198,35 @@ export default function MassageAndSpa() {
         className="flex min-h-screen items-center justify-center bg-[#f3f2ed] px-4 text-center"
         style={{ fontFamily: "Montserrat, sans-serif" }}
       >
-        <div className="max-w-[520px] rounded-2xl border border-red-200 bg-red-50 px-6 py-5 text-sm font-semibold text-red-700">
+        <div className="max-w-[620px] rounded-2xl border border-red-200 bg-red-50 px-6 py-5 text-sm font-semibold text-red-700">
           {error}
         </div>
       </div>
     );
   }
 
-  if (!pageData) {
+  if (!pageData && items.length === 0 && benefits.length === 0) {
     return (
       <div
         className="flex min-h-screen items-center justify-center bg-[#f3f2ed] px-4 text-center"
         style={{ fontFamily: "Montserrat, sans-serif" }}
       >
-        <div className="max-w-[520px] rounded-2xl border border-slate-200 bg-white px-6 py-5 text-sm font-semibold text-slate-600 shadow-sm">
-          Massage & Spa content is not available now.
+        <div className="max-w-[620px] rounded-2xl border border-slate-200 bg-white px-6 py-5 text-sm font-semibold text-slate-600 shadow-sm">
+          Massage & Spa content is not available yet. Please add content from
+          dashboard.
+        </div>
+      </div>
+    );
+  }
+
+  if (pageData && !pageData.is_active) {
+    return (
+      <div
+        className="flex min-h-screen items-center justify-center bg-[#f3f2ed] px-4 text-center"
+        style={{ fontFamily: "Montserrat, sans-serif" }}
+      >
+        <div className="max-w-[620px] rounded-2xl border border-slate-200 bg-white px-6 py-5 text-sm font-semibold text-slate-600 shadow-sm">
+          Massage & Spa page is currently inactive.
         </div>
       </div>
     );
@@ -195,7 +238,7 @@ export default function MassageAndSpa() {
       style={{ fontFamily: "Montserrat, sans-serif" }}
     >
       {/* HERO */}
-      {(pageData.hero_title || pageData.hero_subtitle || pageData.hero_image) && (
+      {hasHero && (
         <section className="relative h-[75vh] overflow-hidden bg-slate-900 sm:h-[80vh] md:h-screen">
           {pageData.hero_image && (
             <div
@@ -229,9 +272,7 @@ export default function MassageAndSpa() {
       )}
 
       {/* INTRO */}
-      {(pageData.intro_eyebrow ||
-        pageData.intro_title ||
-        pageData.intro_description) && (
+      {hasIntro && (
         <section className="px-4 py-10 text-center sm:px-6">
           {pageData.intro_eyebrow && (
             <p className="text-[10px] uppercase tracking-[0.15em] text-[#a88f53]">
@@ -257,10 +298,12 @@ export default function MassageAndSpa() {
       )}
 
       {/* EXPERIENCE */}
-      {(pageData.experience_title ||
-        pageData.experience_description ||
-        pageData.experience_image) && (
-        <section className="mx-auto grid max-w-[1000px] grid-cols-1 items-center gap-6 px-4 pb-12 sm:px-6 md:grid-cols-2">
+      {hasExperience && (
+        <section
+          className={`mx-auto grid max-w-[1000px] grid-cols-1 items-center gap-6 px-4 pb-12 sm:px-6 ${
+            pageData.experience_image ? "md:grid-cols-2" : "md:grid-cols-1"
+          }`}
+        >
           {pageData.experience_image && (
             <div className={imgWrapper}>
               <img
@@ -330,7 +373,7 @@ export default function MassageAndSpa() {
         </section>
       )}
 
-      {/* WELLNESS */}
+      {/* WELLNESS ENHANCEMENTS */}
       {wellnessEnhancementsData.length > 0 && (
         <section className="mx-auto max-w-[1100px] px-4 pb-16 sm:px-6">
           <h2
@@ -384,13 +427,13 @@ export default function MassageAndSpa() {
             <div className="mt-6 grid w-full max-w-[800px] grid-cols-1 gap-6 text-left sm:grid-cols-2 lg:grid-cols-3">
               {[0, 1, 2].map((col) => (
                 <ul key={col} className="space-y-2">
-                  {benefits.slice(col * 4, col * 4 + 4).map((item) => (
+                  {benefits.slice(col * 4, col * 4 + 4).map((benefit) => (
                     <li
-                      key={item}
+                      key={benefit.id || benefit.title}
                       className="flex items-start gap-2 text-[12px] text-[#222]"
                     >
                       <span className="mt-[6px] h-[4px] w-[4px] rounded-full bg-[#8d6f53]" />
-                      <span>{item}</span>
+                      <span>{benefit.title}</span>
                     </li>
                   ))}
                 </ul>
