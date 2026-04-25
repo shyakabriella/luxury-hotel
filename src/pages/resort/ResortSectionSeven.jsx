@@ -1,22 +1,115 @@
 import React, { useEffect, useRef, useState } from "react";
 import homeeight from "../../assets/homepage/homeseven.jpg";
 
-function TreeIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      className="h-7 w-7 md:h-9 md:w-9"
-      fill="currentColor"
-      aria-hidden="true"
-    >
-      <path d="M12 2c-1.6 0-2.8 1.3-2.8 2.8 0 .2 0 .5.1.7-2.2.3-3.8 2.2-3.8 4.4 0 .6.1 1.1.3 1.6-1.8.5-3.1 2.1-3.1 4.1 0 2.4 1.9 4.3 4.3 4.3h3.7V22h2.6v-2.9h3.7c2.4 0 4.3-1.9 4.3-4.3 0-1.9-1.3-3.6-3.1-4.1.2-.5.3-1 .3-1.6 0-2.2-1.6-4.1-3.8-4.4.1-.2.1-.5.1-.7C14.8 3.3 13.6 2 12 2Z" />
-    </svg>
-  );
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000/api";
+
+const API_ROOT_URL = API_BASE_URL.replace(/\/api\/?$/, "");
+
+const fallbackSection = {
+  eyebrow: "Luxury",
+  title: "The Lay Of The Land",
+  description:
+    "Discover vibrant event spaces, outdoor stages, and elegant venues across a fully equipped luxury property designed for celebration, connection, and unforgettable experiences.",
+  image: homeeight,
+  is_active: true,
+};
+
+function buildImageUrl(path) {
+  if (!path) return "";
+
+  if (path.startsWith("http://") || path.startsWith("https://")) {
+    return path;
+  }
+
+  if (path.startsWith("/storage/")) {
+    return `${API_ROOT_URL}${path}`;
+  }
+
+  if (path.startsWith("storage/")) {
+    return `${API_ROOT_URL}/${path}`;
+  }
+
+  return `${API_ROOT_URL}/storage/${path}`;
+}
+
+function toBoolean(value) {
+  return value === true || value === 1 || value === "1" || value === "true";
+}
+
+function getFirstItem(data) {
+  if (Array.isArray(data?.data)) return data.data[0] || null;
+  if (Array.isArray(data)) return data[0] || null;
+  if (data?.data) return data.data;
+  return data || null;
 }
 
 export default function ResortSectionSeven() {
   const sectionRef = useRef(null);
+
   const [show, setShow] = useState(false);
+  const [sectionData, setSectionData] = useState(fallbackSection);
+  const [hidden, setHidden] = useState(false);
+
+  useEffect(() => {
+    const fetchHomeSectionFive = async () => {
+      try {
+        let response = await fetch(`${API_BASE_URL}/home-section-fives/active`, {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+          },
+        });
+
+        let data = await response.json();
+
+        // Fallback if /active endpoint is not available
+        if (!response.ok) {
+          response = await fetch(`${API_BASE_URL}/home-section-fives`, {
+            method: "GET",
+            headers: {
+              Accept: "application/json",
+            },
+          });
+
+          data = await response.json();
+
+          if (!response.ok) {
+            throw new Error(data?.message || "Failed to load Home Section Five.");
+          }
+        }
+
+        const item = getFirstItem(data);
+
+        if (!item) return;
+
+        const isActive = toBoolean(item.is_active ?? true);
+
+        if (!isActive) {
+          setHidden(true);
+          return;
+        }
+
+        const imageValue = item.image_url || item.image || item.image_path || "";
+
+        setSectionData({
+          eyebrow: item.eyebrow || fallbackSection.eyebrow,
+          title: item.title || fallbackSection.title,
+          description: item.description || fallbackSection.description,
+          image: imageValue ? buildImageUrl(imageValue) : fallbackSection.image,
+          is_active: isActive,
+        });
+
+        setHidden(false);
+      } catch (error) {
+        console.error("Home Section Five error:", error);
+        setSectionData(fallbackSection);
+        setHidden(false);
+      }
+    };
+
+    fetchHomeSectionFive();
+  }, []);
 
   useEffect(() => {
     const currentSection = sectionRef.current;
@@ -25,7 +118,7 @@ export default function ResortSectionSeven() {
       ([entry]) => {
         if (entry.isIntersecting) setShow(true);
       },
-      { threshold: 0.2 },
+      { threshold: 0.2 }
     );
 
     if (currentSection) observer.observe(currentSection);
@@ -34,6 +127,8 @@ export default function ResortSectionSeven() {
       if (currentSection) observer.unobserve(currentSection);
     };
   }, []);
+
+  if (hidden) return null;
 
   return (
     <section
@@ -46,35 +141,43 @@ export default function ResortSectionSeven() {
           {/* IMAGE */}
           <div
             className={`relative transition-all duration-700 ${
-              show ? "opacity-100 translate-x-0" : "-translate-x-10 opacity-0"
+              show ? "translate-x-0 opacity-100" : "-translate-x-10 opacity-0"
             }`}
           >
             <img
-              src={homeeight}
-              alt="Resort landscape"
+              src={sectionData.image}
+              alt={sectionData.title || "Resort landscape"}
               className="h-[180px] w-full rounded-md object-cover sm:h-[240px] md:h-[300px] lg:h-[340px]"
+              onError={(e) => {
+                e.currentTarget.src = homeeight;
+              }}
             />
-            
           </div>
 
           {/* CONTENT */}
           <div
-            className={`transition-all duration-700 flex items-center justify-center ${
-              show ? "opacity-100 translate-x-0" : "translate-x-10 opacity-0"
+            className={`flex items-center justify-center transition-all duration-700 ${
+              show ? "translate-x-0 opacity-100" : "translate-x-10 opacity-0"
             }`}
           >
             <div className="max-w-[480px] text-center">
-              <p className="text-[13px] md:text-[15px] font-medium text-[#a17d5a]">
-                Luxury
-              </p>
+              {sectionData.eyebrow && (
+                <p className="text-[13px] font-medium text-[#a17d5a] md:text-[15px]">
+                  {sectionData.eyebrow}
+                </p>
+              )}
 
-              <h2 className="mt-3 text-[20px] md:text-[22px] lg:text-[27px] font-light leading-[1.05] text-[#1e3b3d]">
-                The Lay Of The Land
-              </h2>
+              {sectionData.title && (
+                <h2 className="mt-3 text-[20px] font-light leading-[1.05] text-[#1e3b3d] md:text-[22px] lg:text-[27px]">
+                  {sectionData.title}
+                </h2>
+              )}
 
-              <p className="mt-4 text-[14px] md:text-[16px] leading-[1.7] text-[#334243]">
-                Discover vibrant event spaces, outdoor stages, and elegant venues across a fully equipped luxury property designed for celebration, connection, and unforgettable experiences.
-              </p>
+              {sectionData.description && (
+                <p className="mt-4 text-[14px] leading-[1.7] text-[#334243] md:text-[16px]">
+                  {sectionData.description}
+                </p>
+              )}
             </div>
           </div>
         </div>
