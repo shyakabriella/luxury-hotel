@@ -1,101 +1,206 @@
 import React, { useEffect, useRef, useState } from "react";
 
-import kidsOne from "../../assets/homepage/children/children-one.png";
-import kidsTwo from "../../assets/homepage/children/children-two.png";
-import kidsThree from "../../assets/homepage/children/children-three.png";
-import kidsFour from "../../assets/homepage/children/children-five.jpg";
-import kidsFive from "../../assets/homepage/children/children-five.png";
+import poolOne from "../../assets/homepage/pool/pool-1.jpeg";
+import poolTwo from "../../assets/homepage/pool/pool-2.jpeg";
 
-export default function ResortSectionTwelve() {
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000/api";
+
+const API_ROOT_URL = API_BASE_URL.replace(/\/api\/?$/, "");
+
+const fallbackSection = {
+  title: "Infinity Pool Experience",
+  subtitle: "Relax. Refresh. Repeat.",
+  description:
+    "Unwind in our swimming pool area where luxury meets calm. Take a swim, enjoy the sunset, or just chill by the water — pure resort energy.",
+  image: poolOne,
+  is_active: true,
+};
+
+function buildImageUrl(path) {
+  if (!path) return "";
+
+  if (path.startsWith("http://") || path.startsWith("https://")) {
+    return path;
+  }
+
+  if (path.startsWith("/storage/")) {
+    return `${API_ROOT_URL}${path}`;
+  }
+
+  if (path.startsWith("storage/")) {
+    return `${API_ROOT_URL}/${path}`;
+  }
+
+  return `${API_ROOT_URL}/storage/${path}`;
+}
+
+function toBoolean(value) {
+  return value === true || value === 1 || value === "1" || value === "true";
+}
+
+function getFirstItem(data) {
+  if (Array.isArray(data?.data)) return data.data[0] || null;
+  if (Array.isArray(data)) return data[0] || null;
+  if (data?.data) return data.data;
+  return data || null;
+}
+
+function renderHeading(text) {
+  if (!text) return null;
+
+  const parts = text.split(".");
+
+  if (parts.length < 3) {
+    return text;
+  }
+
+  return (
+    <>
+      {parts[0]}.
+      <span className="text-[#b08a5a]">{parts[1]}.</span>
+      {parts.slice(2).join(".")}
+    </>
+  );
+}
+
+export default function ResortSectionEleven() {
   const sectionRef = useRef(null);
-  const [show, setShow] = useState(false);
 
-  const images = [kidsOne, kidsTwo, kidsThree, kidsFour, kidsFive];
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [show, setShow] = useState(false);
+  const [sectionData, setSectionData] = useState(fallbackSection);
+  const [hidden, setHidden] = useState(false);
 
   useEffect(() => {
-    const el = sectionRef.current;
+    const fetchSectionEleven = async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL}/section11/pool`, {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+          },
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data?.message || "Failed to load Section 11 Pool.");
+        }
+
+        const item = getFirstItem(data);
+
+        if (!item) return;
+
+        const isActive = toBoolean(item.is_active ?? true);
+
+        if (!isActive) {
+          setHidden(true);
+          return;
+        }
+
+        const imageValue = item.image_url || item.image || item.image_path || "";
+
+        setSectionData({
+          title: item.title || fallbackSection.title,
+          subtitle: item.subtitle || fallbackSection.subtitle,
+          description: item.description || fallbackSection.description,
+          image: imageValue ? buildImageUrl(imageValue) : fallbackSection.image,
+          is_active: isActive,
+        });
+
+        setHidden(false);
+      } catch (error) {
+        console.error("Section 11 Pool error:", error);
+        setSectionData(fallbackSection);
+        setHidden(false);
+      }
+    };
+
+    fetchSectionEleven();
+  }, []);
+
+  useEffect(() => {
+    const currentSection = sectionRef.current;
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) setShow(true);
       },
-      { threshold: 0.2 }
+      { threshold: 0.25 }
     );
-    if (el) observer.observe(el);
+
+    if (currentSection) observer.observe(currentSection);
+
     return () => {
-      if (el) observer.unobserve(el);
+      if (currentSection) observer.unobserve(currentSection);
     };
   }, []);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentIndex((p) => (p + 1) % images.length);
-    }, 2500);
-    return () => clearInterval(interval);
-  }, []);
+  if (hidden) return null;
 
   return (
     <section
       ref={sectionRef}
-      className="w-full bg-[#efeee8] py-8 md:py-10 overflow-hidden"
+      className="w-full overflow-hidden bg-[#efeee8] py-8 md:py-10"
       style={{ fontFamily: "Montserrat, sans-serif" }}
     >
-      <div className="mx-auto max-w-[950px] px-5 md:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-
-          {/* IMAGE */}
+      <div className="mx-auto max-w-[950px] px-4 md:px-8 lg:px-10">
+        <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-2">
+          {/* Text */}
           <div
-            className={`transition-all duration-700 ${
-              show ? "opacity-100 translate-x-0" : "translate-x-8 opacity-0"
+            className={`flex flex-col items-center text-center transition-all duration-700 ease-out ${
+              show ? "translate-x-0 opacity-100" : "-translate-x-8 opacity-0"
             }`}
           >
-            <div className="relative h-[200px] sm:h-[240px] md:h-[280px] lg:h-[320px] overflow-hidden rounded-xl shadow-md">
-              {images.map((img, i) => (
+            {sectionData.title && (
+              <p className="text-[12px] font-medium text-[#b08a5a] md:text-[13px]">
+                {sectionData.title}
+              </p>
+            )}
+
+            {sectionData.subtitle && (
+              <h2 className="mt-2 text-[20px] font-light leading-[1.2] text-[#1f3d3f] md:text-[24px] lg:text-[28px]">
+                {renderHeading(sectionData.subtitle)}
+              </h2>
+            )}
+
+            {sectionData.description && (
+              <p className="mt-3 max-w-[420px] text-[12px] leading-[1.5] text-[#2d3b3c] md:text-[14px]">
+                {sectionData.description}
+              </p>
+            )}
+          </div>
+
+          {/* Images */}
+          <div
+            className={`flex justify-center transition-all duration-700 ease-out ${
+              show ? "translate-x-0 opacity-100" : "translate-x-8 opacity-0"
+            }`}
+          >
+            <div className="relative h-[220px] w-full max-w-[360px] sm:h-[260px] md:h-[300px] lg:h-[340px]">
+              <div className="absolute left-4 top-4 z-0 h-full w-full rotate-[-3deg] overflow-hidden rounded-xl shadow-md">
                 <img
-                  key={i}
-                  src={img}
-                  alt="Kids leisure"
-                  className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-1000 ${
-                    i === currentIndex ? "opacity-100" : "opacity-0"
-                  }`}
+                  src={poolTwo}
+                  alt="Pool background view"
+                  className="h-full w-full object-cover"
+                  onError={(e) => {
+                    e.currentTarget.src = poolTwo;
+                  }}
                 />
-              ))}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
+              </div>
+
+              <div className="absolute left-0 top-0 z-10 h-full w-full overflow-hidden rounded-xl shadow-lg">
+                <img
+                  src={sectionData.image}
+                  alt={sectionData.title || "Pool view"}
+                  className="h-full w-full object-cover"
+                  onError={(e) => {
+                    e.currentTarget.src = poolOne;
+                  }}
+                />
+              </div>
             </div>
           </div>
-
-          {/* TEXT */}
-          <div
-            className={`transition-all duration-700 flex flex-col items-center text-center ${
-              show ? "opacity-100 translate-x-0" : "-translate-x-8 opacity-0"
-            }`}
-          >
-            <p className="text-[12px] md:text-[13px] font-medium text-[#b08a5a]">
-              Family Experience & Kids Zone
-            </p>
-
-            <h2 className="mt-2 text-[20px] md:text-[24px] lg:text-[28px] font-light leading-[1.2] text-[#1f3d3f]">
-              Where Joy Comes Alive
-            </h2>
-
-            <p className="mt-3 text-[12px] md:text-[14px] leading-[1.5] text-[#2d3b3c] max-w-[420px]">
-              A safe, engaging space where kids explore, play, and create
-              memories while families relax with peace of mind.
-            </p>
-
-            {/* tags */}
-            <div className="mt-5 flex flex-wrap justify-center gap-2 text-[11px] md:text-[12px]">
-              {["Safe Play", "Creative Fun", "Indoor & Outdoor", "Family Friendly"].map((item) => (
-                <span
-                  key={item}
-                  className="px-2 py-1 bg-white/50 border border-[#e7dccb] rounded-full text-[#3b3b3b]"
-                >
-                  {item}
-                </span>
-              ))}
-            </div>
-          </div>
-
         </div>
       </div>
     </section>
