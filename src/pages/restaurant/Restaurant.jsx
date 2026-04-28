@@ -198,7 +198,6 @@ export default function Restaurant() {
 
   const handleBuyFromPopup = () => {
     if (!selectedItem) return;
-
     addOne(selectedItem);
     setSelectedItem(null);
   };
@@ -313,7 +312,6 @@ export default function Restaurant() {
         if (result?.errors) {
           const firstKey = Object.keys(result.errors)[0];
           const firstError = result.errors[firstKey]?.[0];
-
           throw new Error(firstError || "Failed to create booking.");
         }
 
@@ -342,39 +340,41 @@ export default function Restaurant() {
 
   return (
     <section
-      className="min-h-screen bg-[#eaf4f7]"
+      className="min-h-screen bg-[#eaf4f7] pt-[95px] md:pt-[110px]"
       style={{ fontFamily: "Montserrat, sans-serif" }}
     >
-      {/* SMALL BLACK BANNER */}
-      <div className="w-full bg-black">
-        <div className="mx-auto flex min-h-[86px] w-full max-w-[1300px] items-center px-4 py-4 md:px-6 lg:px-8">
-          <div className="flex w-full flex-col gap-3 md:flex-row md:items-center md:justify-between">
-            <div className="text-white">
-              <p className="text-[9px] font-semibold uppercase tracking-[0.24em] text-[#b4945a]">
+      {/* CLEAN PAGE HEADER */}
+      <div className="mx-auto max-w-[1300px] px-4 md:px-6 lg:px-8">
+        <div className="mb-4 rounded-[18px] border border-slate-200 bg-white px-4 py-4 shadow-sm md:px-6">
+          <div className="flex items-start gap-3">
+            <div
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full"
+              style={{ backgroundColor: `${BRAND_GOLD}20` }}
+            >
+              <UtensilsCrossed size={22} style={{ color: BRAND_GOLD_DARK }} />
+            </div>
+
+            <div className="min-w-0">
+              <p
+                className="text-[10px] font-semibold uppercase tracking-[0.24em]"
+                style={{ color: BRAND_GOLD_DARK }}
+              >
                 Restaurant • Bar • Order • Booking
               </p>
 
-              <h1 className="mt-1.5 flex items-center gap-2 text-[20px] font-bold leading-tight md:text-[26px]">
-                <UtensilsCrossed
-                  size={23}
-                  className="shrink-0 text-[#b4945a]"
-                />
-                <span>Restaurant — Order &amp; Book</span>
+              <h1 className="mt-1 text-[24px] font-bold leading-tight text-slate-900 md:text-[30px]">
+                Restaurant — Order &amp; Book
               </h1>
 
-              <p className="mt-1 hidden max-w-[620px] text-[12px] leading-5 text-white/70 sm:block">
+              <p className="mt-1 text-[13px] leading-6 text-slate-500 md:text-[14px]">
                 Choose from our menu, view items, and add them to your order.
               </p>
-            </div>
-
-            <div className="hidden rounded-full border border-white/10 bg-white/5 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-white/70 md:block">
-              Luxury Garden Palace
             </div>
           </div>
         </div>
       </div>
 
-      <div className="mx-auto max-w-[1300px] px-4 py-4 md:px-6 lg:px-8">
+      <div className="mx-auto max-w-[1300px] px-4 pb-6 md:px-6 lg:px-8">
         <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_330px] 2xl:grid-cols-[minmax(0,1fr)_350px]">
           {/* LEFT SIDE */}
           <div className="space-y-4">
@@ -562,7 +562,7 @@ export default function Restaurant() {
           </div>
 
           {/* RIGHT SIDE ORDER PANEL */}
-          <aside className="xl:sticky xl:top-4 xl:self-start">
+          <aside className="xl:sticky xl:top-24 xl:self-start">
             <div className="rounded-[18px] border border-slate-200 bg-white shadow-sm">
               <div className="flex items-center gap-3 border-b border-slate-200 px-4 py-3">
                 <ShoppingCart size={19} className="text-sky-700" />
@@ -701,7 +701,7 @@ export default function Restaurant() {
         </div>
       </div>
 
-      {/* ITEM DETAILS POPUP - VERY SMALL + RESPONSIVE */}
+      {/* ITEM DETAILS POPUP */}
       {selectedItem && (
         <div className="fixed inset-0 z-[999] flex items-center justify-center bg-black/60 px-3 py-3">
           <div className="relative w-full max-w-[92vw] overflow-hidden rounded-[16px] bg-white shadow-2xl sm:max-w-[500px] md:max-w-[560px] lg:max-w-[600px]">
@@ -746,7 +746,7 @@ export default function Restaurant() {
                 </p>
 
                 {selectedItem.description && (
-                  <p className="mt-3 line-clamp-3 text-[12px] leading-5 text-slate-600">
+                  <p className="mt-3 text-[12px] leading-5 text-slate-600">
                     {selectedItem.description}
                   </p>
                 )}
