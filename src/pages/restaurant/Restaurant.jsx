@@ -13,9 +13,6 @@ import {
   X,
 } from "lucide-react";
 
-const bannerImage =
-  "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=1600&auto=format&fit=crop";
-
 const fallbackImage =
   "https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=1200&auto=format&fit=crop";
 
@@ -348,32 +345,30 @@ export default function Restaurant() {
       className="min-h-screen bg-[#eaf4f7]"
       style={{ fontFamily: "Montserrat, sans-serif" }}
     >
-      {/* BANNER */}
-      <div className="relative h-[150px] w-full overflow-hidden sm:h-[175px] md:h-[200px]">
-        <img
-          src={bannerImage}
-          alt="Restaurant banner"
-          className="h-full w-full object-cover"
-        />
-
-        <div className="absolute inset-0 bg-[#0f4c81]/55" />
-
-        <div className="absolute inset-0 flex items-center">
-          <div className="mx-auto w-full max-w-[1300px] px-4 md:px-6 lg:px-8">
-            <div className="max-w-[620px] text-white">
-              <p className="text-[9px] uppercase tracking-[0.22em] text-white/90">
+      {/* SMALL BLACK BANNER */}
+      <div className="w-full bg-black">
+        <div className="mx-auto flex min-h-[86px] w-full max-w-[1300px] items-center px-4 py-4 md:px-6 lg:px-8">
+          <div className="flex w-full flex-col gap-3 md:flex-row md:items-center md:justify-between">
+            <div className="text-white">
+              <p className="text-[9px] font-semibold uppercase tracking-[0.24em] text-[#b4945a]">
                 Restaurant • Bar • Order • Booking
               </p>
 
-              <h1 className="mt-2 flex items-center gap-2 text-[21px] font-semibold md:text-[32px]">
-                <UtensilsCrossed size={26} className="shrink-0" />
+              <h1 className="mt-1.5 flex items-center gap-2 text-[20px] font-bold leading-tight md:text-[26px]">
+                <UtensilsCrossed
+                  size={23}
+                  className="shrink-0 text-[#b4945a]"
+                />
                 <span>Restaurant — Order &amp; Book</span>
               </h1>
 
-              <p className="mt-2 text-[12px] leading-[1.7] text-white/90 md:text-[14px]">
-                Choose from our menu, open any item to view details, then add it
-                to your order.
+              <p className="mt-1 hidden max-w-[620px] text-[12px] leading-5 text-white/70 sm:block">
+                Choose from our menu, view items, and add them to your order.
               </p>
+            </div>
+
+            <div className="hidden rounded-full border border-white/10 bg-white/5 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-white/70 md:block">
+              Luxury Garden Palace
             </div>
           </div>
         </div>
@@ -719,7 +714,6 @@ export default function Restaurant() {
             </button>
 
             <div className="grid max-h-[82vh] overflow-y-auto md:grid-cols-[0.9fr_1fr]">
-              {/* Image */}
               <div className="relative h-[150px] overflow-hidden bg-slate-100 sm:h-[175px] md:h-auto md:min-h-[250px]">
                 <img
                   src={selectedItem.image}
@@ -735,7 +729,6 @@ export default function Restaurant() {
                 </div>
               </div>
 
-              {/* Content */}
               <div className="flex flex-col justify-center p-4">
                 <p
                   className="text-[9px] font-bold uppercase tracking-[0.16em]"
