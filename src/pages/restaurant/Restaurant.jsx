@@ -206,8 +206,8 @@ export default function Restaurant() {
     setSelectedItem(null);
   };
 
-  const handleCustomerChange = (e) => {
-    const { name, value } = e.target;
+  const handleCustomerChange = (event) => {
+    const { name, value } = event.target;
 
     setBookingError("");
     setBookingSuccess(null);
@@ -250,7 +250,7 @@ export default function Restaurant() {
   const createBooking = async () => {
     try {
       setBookingError("");
-      setBookingSuccess(null");
+      setBookingSuccess(null);
 
       if (!checkoutMode) {
         setBookingError("Please choose Buy Now or Book Table.");
@@ -498,8 +498,8 @@ export default function Restaurant() {
                             src={item.image}
                             alt={item.name}
                             className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
-                            onError={(e) => {
-                              e.currentTarget.src = fallbackImage;
+                            onError={(event) => {
+                              event.currentTarget.src = fallbackImage;
                             }}
                           />
 
@@ -612,8 +612,8 @@ export default function Restaurant() {
                             src={item.image}
                             alt={item.name}
                             className="h-full w-full object-cover"
-                            onError={(e) => {
-                              e.currentTarget.src = fallbackImage;
+                            onError={(event) => {
+                              event.currentTarget.src = fallbackImage;
                             }}
                           />
                         </div>
@@ -631,6 +631,7 @@ export default function Restaurant() {
                         <div className="flex items-center gap-1">
                           <div className="flex items-center overflow-hidden rounded-lg border border-slate-200">
                             <button
+                              type="button"
                               onClick={() => removeOne(item)}
                               className="flex h-7 w-7 items-center justify-center hover:bg-slate-50"
                             >
@@ -642,6 +643,7 @@ export default function Restaurant() {
                             </span>
 
                             <button
+                              type="button"
                               onClick={() => addOne(item)}
                               className="flex h-7 w-7 items-center justify-center hover:bg-slate-50"
                             >
@@ -650,6 +652,7 @@ export default function Restaurant() {
                           </div>
 
                           <button
+                            type="button"
                             onClick={() => removeLine(item.id)}
                             className="text-rose-500"
                           >
@@ -674,6 +677,7 @@ export default function Restaurant() {
                 </div>
 
                 <button
+                  type="button"
                   onClick={() => openCheckoutModal("buy_now")}
                   disabled={cart.length === 0}
                   className="flex h-11 w-full items-center justify-center gap-2 rounded-xl text-[14px] font-medium text-white transition disabled:cursor-not-allowed disabled:opacity-50"
@@ -684,6 +688,7 @@ export default function Restaurant() {
                 </button>
 
                 <button
+                  type="button"
                   onClick={() => openCheckoutModal("table")}
                   disabled={cart.length === 0}
                   className="flex h-11 w-full items-center justify-center gap-2 rounded-xl border text-[14px] font-medium transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
@@ -716,8 +721,8 @@ export default function Restaurant() {
                   src={selectedItem.image}
                   alt={selectedItem.name}
                   className="h-full w-full object-cover"
-                  onError={(e) => {
-                    e.currentTarget.src = fallbackImage;
+                  onError={(event) => {
+                    event.currentTarget.src = fallbackImage;
                   }}
                 />
 
