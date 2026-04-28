@@ -250,7 +250,7 @@ export default function Restaurant() {
   const createBooking = async () => {
     try {
       setBookingError("");
-      setBookingSuccess(null);
+      setBookingSuccess(null");
 
       if (!checkoutMode) {
         setBookingError("Please choose Buy Now or Book Table.");
@@ -263,8 +263,14 @@ export default function Restaurant() {
       }
 
       if (checkoutMode === "table") {
-        if (!customer.bookingDate || !customer.bookingTime || !customer.partySize) {
-          setBookingError("Please fill table booking date, time, and party size.");
+        if (
+          !customer.bookingDate ||
+          !customer.bookingTime ||
+          !customer.partySize
+        ) {
+          setBookingError(
+            "Please fill table booking date, time, and party size."
+          );
           return;
         }
       }
@@ -343,7 +349,7 @@ export default function Restaurant() {
       style={{ fontFamily: "Montserrat, sans-serif" }}
     >
       {/* BANNER */}
-      <div className="relative h-[200px] w-full overflow-hidden sm:h-[230px] md:h-[260px]">
+      <div className="relative h-[160px] w-full overflow-hidden sm:h-[180px] md:h-[210px]">
         <img
           src={bannerImage}
           alt="Restaurant banner"
@@ -353,18 +359,18 @@ export default function Restaurant() {
         <div className="absolute inset-0 bg-[#0f4c81]/55" />
 
         <div className="absolute inset-0 flex items-center">
-          <div className="mx-auto w-full max-w-[1500px] px-4 md:px-6 lg:px-8">
-            <div className="max-w-[760px] text-white">
-              <p className="text-[11px] uppercase tracking-[0.28em] text-white/90">
+          <div className="mx-auto w-full max-w-[1380px] px-4 md:px-6 lg:px-8">
+            <div className="max-w-[680px] text-white">
+              <p className="text-[10px] uppercase tracking-[0.24em] text-white/90">
                 Restaurant • Bar • Order • Booking
               </p>
 
-              <h1 className="mt-3 flex items-center gap-3 text-[24px] font-semibold md:text-[40px]">
-                <UtensilsCrossed size={32} className="shrink-0" />
+              <h1 className="mt-2 flex items-center gap-2 text-[22px] font-semibold md:text-[34px]">
+                <UtensilsCrossed size={28} className="shrink-0" />
                 <span>Restaurant — Order &amp; Book</span>
               </h1>
 
-              <p className="mt-3 text-[14px] leading-[1.8] text-white/90 md:text-[16px]">
+              <p className="mt-2 text-[13px] leading-[1.7] text-white/90 md:text-[15px]">
                 Choose from our menu, open any item to view details, then add it
                 to your order.
               </p>
@@ -373,20 +379,20 @@ export default function Restaurant() {
         </div>
       </div>
 
-      <div className="mx-auto max-w-[1500px] px-4 py-5 md:px-6 lg:px-8">
-        <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_390px] 2xl:grid-cols-[minmax(0,1fr)_410px]">
+      <div className="mx-auto max-w-[1380px] px-4 py-4 md:px-6 lg:px-8">
+        <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_340px] 2xl:grid-cols-[minmax(0,1fr)_360px]">
           {/* LEFT SIDE */}
-          <div className="space-y-5">
+          <div className="space-y-4">
             {/* TOP TAB AREA */}
-            <div className="rounded-[24px] border border-slate-200 bg-white p-4 shadow-sm">
-              <div className="flex flex-col items-center justify-center gap-4">
-                <div className="flex flex-wrap items-center justify-center gap-3">
+            <div className="rounded-[20px] border border-slate-200 bg-white p-3 shadow-sm">
+              <div className="flex flex-col items-center justify-center gap-3">
+                <div className="flex flex-wrap items-center justify-center gap-2">
                   <button
                     onClick={() => {
                       setActiveTab("restaurant");
                       setActiveCategory("All");
                     }}
-                    className="rounded-full px-7 py-3 text-[17px] font-semibold text-white shadow-md transition"
+                    className="rounded-full px-5 py-2 text-[14px] font-semibold shadow-sm transition"
                     style={{
                       backgroundColor:
                         activeTab === "restaurant" ? BRAND_GOLD : "#e5e7eb",
@@ -401,7 +407,7 @@ export default function Restaurant() {
                       setActiveTab("bar");
                       setActiveCategory("All");
                     }}
-                    className="rounded-full px-7 py-3 text-[17px] font-semibold shadow-md transition"
+                    className="rounded-full px-5 py-2 text-[14px] font-semibold shadow-sm transition"
                     style={{
                       backgroundColor:
                         activeTab === "bar" ? BRAND_GOLD : "#e5e7eb",
@@ -412,7 +418,7 @@ export default function Restaurant() {
                   </button>
                 </div>
 
-                <div className="flex flex-wrap justify-center gap-3">
+                <div className="flex flex-wrap justify-center gap-2">
                   {categories.map((category) => {
                     const isActive = activeCategory === category;
 
@@ -420,7 +426,7 @@ export default function Restaurant() {
                       <button
                         key={category}
                         onClick={() => setActiveCategory(category)}
-                        className="rounded-full border px-5 py-3 text-[15px] transition"
+                        className="rounded-full border px-4 py-2 text-[13px] font-medium transition"
                         style={{
                           borderColor: isActive ? BRAND_GOLD : "#cbd5e1",
                           backgroundColor: isActive ? BRAND_GOLD : "#ffffff",
@@ -436,24 +442,24 @@ export default function Restaurant() {
             </div>
 
             {/* CUSTOM DISH */}
-            <div className="rounded-[24px] border border-slate-200 bg-white shadow-sm">
+            <div className="rounded-[20px] border border-slate-200 bg-white shadow-sm">
               <button
                 type="button"
                 onClick={() => setShowCustomDish((prev) => !prev)}
-                className="w-full px-5 py-5 text-left text-[17px] font-medium text-sky-700"
+                className="w-full px-4 py-4 text-left text-[15px] font-medium text-sky-700"
               >
                 + Suggest a Custom Dish
               </button>
 
               {showCustomDish && (
-                <div className="border-t border-slate-200 px-5 pb-5">
+                <div className="border-t border-slate-200 px-4 pb-4">
                   <textarea
                     name="customDish"
                     value={customer.customDish}
                     onChange={handleCustomerChange}
-                    rows={4}
+                    rows={3}
                     placeholder="Write your custom dish request here..."
-                    className="mt-4 w-full rounded-xl border border-slate-200 px-4 py-4 text-[15px] outline-none"
+                    className="mt-4 w-full rounded-xl border border-slate-200 px-4 py-3 text-[14px] outline-none"
                   />
                 </div>
               )}
@@ -469,7 +475,7 @@ export default function Restaurant() {
                 {menuError}
               </div>
             ) : (
-              <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+              <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
                 {filteredItems.length === 0 ? (
                   <div className="col-span-full rounded-2xl bg-white p-8 text-center text-slate-500 shadow-sm">
                     No items found for this category.
@@ -481,12 +487,12 @@ export default function Restaurant() {
                     return (
                       <div
                         key={item.id}
-                        className="overflow-hidden rounded-[22px] border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
+                        className="overflow-hidden rounded-[18px] border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
                       >
                         <button
                           type="button"
                           onClick={() => setSelectedItem(item)}
-                          className="group relative block h-[210px] w-full overflow-hidden bg-slate-100 text-left"
+                          className="group relative block h-[155px] w-full overflow-hidden bg-slate-100 text-left md:h-[170px]"
                         >
                           <img
                             src={item.image}
@@ -499,27 +505,27 @@ export default function Restaurant() {
 
                           <div className="absolute inset-0 bg-black/0 transition group-hover:bg-black/25" />
 
-                          <div className="absolute bottom-3 left-3 rounded-full bg-white/90 px-3 py-1 text-[11px] font-semibold text-slate-700 opacity-0 transition group-hover:opacity-100">
-                            Click to view details
+                          <div className="absolute bottom-2 left-2 rounded-full bg-white/90 px-3 py-1 text-[10px] font-semibold text-slate-700 opacity-0 transition group-hover:opacity-100">
+                            View details
                           </div>
                         </button>
 
-                        <div className="p-4">
+                        <div className="p-3">
                           <div className="flex items-start justify-between gap-3">
-                            <h3 className="text-[15px] font-bold leading-tight text-slate-900">
+                            <h3 className="text-[14px] font-bold leading-tight text-slate-900">
                               {item.name}
                             </h3>
 
-                            <span className="shrink-0 text-[14px] font-bold text-slate-900">
+                            <span className="shrink-0 text-[13px] font-bold text-slate-900">
                               {money(item.price)}
                             </span>
                           </div>
 
-                          <div className="mt-4 flex items-center justify-between gap-3">
+                          <div className="mt-3 flex items-center justify-between gap-3">
                             <button
                               type="button"
                               onClick={() => setSelectedItem(item)}
-                              className="rounded-full border border-slate-200 px-4 py-2 text-[12px] font-semibold text-slate-600 transition hover:border-[#b4945a] hover:text-[#9f8045]"
+                              className="rounded-full border border-slate-200 px-3 py-1.5 text-[11px] font-semibold text-slate-600 transition hover:border-[#b4945a] hover:text-[#9f8045]"
                             >
                               View Details
                             </button>
@@ -529,21 +535,21 @@ export default function Restaurant() {
                                 <button
                                   type="button"
                                   onClick={() => removeOne(item)}
-                                  className="flex h-8 w-8 items-center justify-center text-slate-700 transition hover:bg-slate-50"
+                                  className="flex h-7 w-7 items-center justify-center text-slate-700 transition hover:bg-slate-50"
                                 >
-                                  <Minus size={13} />
+                                  <Minus size={12} />
                                 </button>
 
-                                <div className="flex h-8 min-w-[30px] items-center justify-center text-[13px] font-semibold">
+                                <div className="flex h-7 min-w-[28px] items-center justify-center text-[12px] font-semibold">
                                   {qty}
                                 </div>
 
                                 <button
                                   type="button"
                                   onClick={() => addOne(item)}
-                                  className="flex h-8 w-8 items-center justify-center text-slate-700 transition hover:bg-slate-50"
+                                  className="flex h-7 w-7 items-center justify-center text-slate-700 transition hover:bg-slate-50"
                                 >
-                                  <Plus size={13} />
+                                  <Plus size={12} />
                                 </button>
                               </div>
                             )}
@@ -559,18 +565,18 @@ export default function Restaurant() {
 
           {/* RIGHT SIDE ORDER PANEL */}
           <aside className="xl:sticky xl:top-4 xl:self-start">
-            <div className="rounded-[24px] border border-slate-200 bg-white shadow-sm">
-              <div className="flex items-center gap-3 border-b border-slate-200 px-5 py-4">
-                <ShoppingCart size={22} className="text-sky-700" />
+            <div className="rounded-[20px] border border-slate-200 bg-white shadow-sm">
+              <div className="flex items-center gap-3 border-b border-slate-200 px-4 py-3">
+                <ShoppingCart size={20} className="text-sky-700" />
 
-                <h2 className="text-[20px] font-semibold text-slate-900">
+                <h2 className="text-[18px] font-semibold text-slate-900">
                   Your Order
                 </h2>
               </div>
 
-              <div className="space-y-4 p-4">
+              <div className="space-y-3 p-3">
                 {bookingSuccess && (
-                  <div className="rounded-2xl border border-green-200 bg-green-50 p-3 text-[14px] text-green-700">
+                  <div className="rounded-2xl border border-green-200 bg-green-50 p-3 text-[13px] text-green-700">
                     <p className="font-semibold">{bookingSuccess.message}</p>
 
                     {bookingSuccess.bookingCode ? (
@@ -585,23 +591,23 @@ export default function Restaurant() {
                 )}
 
                 {bookingError && (
-                  <div className="rounded-2xl border border-red-200 bg-red-50 p-3 text-[14px] text-red-700">
+                  <div className="rounded-2xl border border-red-200 bg-red-50 p-3 text-[13px] text-red-700">
                     {bookingError}
                   </div>
                 )}
 
                 <div className="space-y-3">
                   {cart.length === 0 ? (
-                    <div className="rounded-2xl border border-dashed border-slate-300 p-4 text-[14px] text-slate-500">
+                    <div className="rounded-2xl border border-dashed border-slate-300 p-4 text-[13px] text-slate-500">
                       No item added yet.
                     </div>
                   ) : (
                     cart.map((item) => (
                       <div
                         key={item.id}
-                        className="flex items-center gap-2.5 border-b border-slate-200 pb-3"
+                        className="flex items-center gap-2 border-b border-slate-200 pb-3"
                       >
-                        <div className="h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-slate-100">
+                        <div className="h-11 w-11 shrink-0 overflow-hidden rounded-lg bg-slate-100">
                           <img
                             src={item.image}
                             alt={item.name}
@@ -613,33 +619,33 @@ export default function Restaurant() {
                         </div>
 
                         <div className="min-w-0 flex-1">
-                          <h4 className="truncate text-[14px] font-semibold text-slate-900">
+                          <h4 className="truncate text-[13px] font-semibold text-slate-900">
                             {item.name}
                           </h4>
 
-                          <p className="text-[12px] text-slate-500">
+                          <p className="text-[11px] text-slate-500">
                             {money(item.price)}
                           </p>
                         </div>
 
-                        <div className="flex items-center gap-1.5">
+                        <div className="flex items-center gap-1">
                           <div className="flex items-center overflow-hidden rounded-lg border border-slate-200">
                             <button
                               onClick={() => removeOne(item)}
-                              className="flex h-8 w-8 items-center justify-center hover:bg-slate-50"
+                              className="flex h-7 w-7 items-center justify-center hover:bg-slate-50"
                             >
-                              <Minus size={14} />
+                              <Minus size={13} />
                             </button>
 
-                            <span className="min-w-[26px] text-center text-[14px]">
+                            <span className="min-w-[24px] text-center text-[13px]">
                               {item.quantity}
                             </span>
 
                             <button
                               onClick={() => addOne(item)}
-                              className="flex h-8 w-8 items-center justify-center hover:bg-slate-50"
+                              className="flex h-7 w-7 items-center justify-center hover:bg-slate-50"
                             >
-                              <Plus size={14} />
+                              <Plus size={13} />
                             </button>
                           </div>
 
@@ -647,7 +653,7 @@ export default function Restaurant() {
                             onClick={() => removeLine(item.id)}
                             className="text-rose-500"
                           >
-                            <Trash2 size={16} />
+                            <Trash2 size={15} />
                           </button>
                         </div>
                       </div>
@@ -656,12 +662,12 @@ export default function Restaurant() {
                 </div>
 
                 <div className="space-y-1.5 border-t border-slate-200 pt-3">
-                  <div className="flex items-center justify-between text-[15px] text-slate-700">
+                  <div className="flex items-center justify-between text-[14px] text-slate-700">
                     <span>Subtotal</span>
                     <span>{money(subtotal)}</span>
                   </div>
 
-                  <div className="flex items-center justify-between pt-1 text-[20px] font-semibold text-sky-700">
+                  <div className="flex items-center justify-between pt-1 text-[18px] font-semibold text-sky-700">
                     <span>Total</span>
                     <span>{money(total)}</span>
                   </div>
@@ -670,20 +676,20 @@ export default function Restaurant() {
                 <button
                   onClick={() => openCheckoutModal("buy_now")}
                   disabled={cart.length === 0}
-                  className="flex h-12 w-full items-center justify-center gap-2 rounded-xl text-[16px] font-medium text-white transition disabled:cursor-not-allowed disabled:opacity-50"
+                  className="flex h-11 w-full items-center justify-center gap-2 rounded-xl text-[14px] font-medium text-white transition disabled:cursor-not-allowed disabled:opacity-50"
                   style={{ backgroundColor: BRAND_GOLD }}
                 >
-                  <Wallet size={18} />
+                  <Wallet size={17} />
                   Buy Now
                 </button>
 
                 <button
                   onClick={() => openCheckoutModal("table")}
                   disabled={cart.length === 0}
-                  className="flex h-12 w-full items-center justify-center gap-2 rounded-xl border text-[16px] font-medium transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+                  className="flex h-11 w-full items-center justify-center gap-2 rounded-xl border text-[14px] font-medium transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
                   style={{ borderColor: BRAND_GOLD, color: BRAND_GOLD_DARK }}
                 >
-                  <CalendarDays size={18} />
+                  <CalendarDays size={17} />
                   Book Table
                 </button>
               </div>
@@ -694,18 +700,18 @@ export default function Restaurant() {
 
       {/* ITEM DETAILS POPUP */}
       {selectedItem && (
-        <div className="fixed inset-0 z-[999] flex items-center justify-center bg-black/60 px-4 py-6">
-          <div className="relative max-h-[92vh] w-full max-w-[920px] overflow-y-auto rounded-[28px] bg-white shadow-2xl">
+        <div className="fixed inset-0 z-[999] flex items-center justify-center bg-black/60 px-4 py-5">
+          <div className="relative max-h-[84vh] w-full max-w-[760px] overflow-y-auto rounded-[22px] bg-white shadow-2xl">
             <button
               type="button"
               onClick={() => setSelectedItem(null)}
-              className="absolute right-4 top-4 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-slate-700 shadow-md transition hover:bg-white"
+              className="absolute right-3 top-3 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 text-slate-700 shadow-md transition hover:bg-white"
             >
-              <X size={20} />
+              <X size={17} />
             </button>
 
-            <div className="grid gap-0 md:grid-cols-[1.1fr_0.9fr]">
-              <div className="relative min-h-[280px] overflow-hidden bg-slate-100 md:min-h-[520px]">
+            <div className="grid gap-0 md:grid-cols-[1fr_0.9fr]">
+              <div className="relative min-h-[220px] overflow-hidden bg-slate-100 md:min-h-[360px]">
                 <img
                   src={selectedItem.image}
                   alt={selectedItem.name}
@@ -715,55 +721,55 @@ export default function Restaurant() {
                   }}
                 />
 
-                <div className="absolute left-4 top-4 rounded-full bg-white/90 px-4 py-2 text-xs font-bold text-slate-700 shadow">
+                <div className="absolute left-3 top-3 rounded-full bg-white/90 px-3 py-1.5 text-[10px] font-bold text-slate-700 shadow">
                   {selectedItem.category || activeTab}
                 </div>
               </div>
 
-              <div className="flex flex-col justify-center p-6 md:p-8">
+              <div className="flex flex-col justify-center p-5 md:p-6">
                 <p
-                  className="text-[12px] font-bold uppercase tracking-[0.2em]"
+                  className="text-[10px] font-bold uppercase tracking-[0.18em]"
                   style={{ color: BRAND_GOLD_DARK }}
                 >
                   Menu Item
                 </p>
 
-                <h2 className="mt-3 text-[26px] font-bold leading-tight text-slate-950 md:text-[34px]">
+                <h2 className="mt-2 text-[24px] font-bold leading-tight text-slate-950 md:text-[28px]">
                   {selectedItem.name}
                 </h2>
 
-                <p className="mt-3 text-[22px] font-bold text-slate-900">
+                <p className="mt-2 text-[19px] font-bold text-slate-900">
                   {money(selectedItem.price)}
                 </p>
 
                 {selectedItem.description && (
-                  <p className="mt-5 text-[15px] leading-7 text-slate-600">
+                  <p className="mt-4 text-[14px] leading-6 text-slate-600">
                     {selectedItem.description}
                   </p>
                 )}
 
-                <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+                <div className="mt-5 flex flex-col gap-2 sm:flex-row">
                   <button
                     type="button"
                     onClick={handleBuyFromPopup}
-                    className="inline-flex flex-1 items-center justify-center gap-2 rounded-2xl px-5 py-4 text-[15px] font-bold text-white transition hover:opacity-90"
+                    className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl px-4 py-3 text-[13px] font-bold text-white transition hover:opacity-90"
                     style={{ backgroundColor: BRAND_GOLD }}
                   >
-                    <ShoppingCart size={18} />
-                    Buy / Add to Order
+                    <ShoppingCart size={16} />
+                    Buy / Add
                   </button>
 
                   <button
                     type="button"
                     onClick={() => setSelectedItem(null)}
-                    className="inline-flex flex-1 items-center justify-center rounded-2xl border border-slate-200 px-5 py-4 text-[15px] font-bold text-slate-700 transition hover:bg-slate-50"
+                    className="inline-flex flex-1 items-center justify-center rounded-xl border border-slate-200 px-4 py-3 text-[13px] font-bold text-slate-700 transition hover:bg-slate-50"
                   >
-                    Continue Viewing
+                    Continue
                   </button>
                 </div>
 
                 {getItemQty(selectedItem.id) > 0 && (
-                  <div className="mt-5 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-700">
+                  <div className="mt-4 rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-[13px] font-semibold text-emerald-700">
                     Already in order: {getItemQty(selectedItem.id)}
                   </div>
                 )}
@@ -775,25 +781,25 @@ export default function Restaurant() {
 
       {/* CHECKOUT MODAL */}
       {checkoutMode && (
-        <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/60 px-4 py-6">
-          <div className="relative max-h-[90vh] w-full max-w-[640px] overflow-y-auto rounded-[24px] bg-white p-5 shadow-2xl md:p-6">
+        <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/60 px-4 py-5">
+          <div className="relative max-h-[86vh] w-full max-w-[560px] overflow-y-auto rounded-[22px] bg-white p-4 shadow-2xl md:p-5">
             <button
               type="button"
               onClick={() => setCheckoutMode(null)}
-              className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 text-slate-600 transition hover:bg-slate-200"
+              className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-slate-600 transition hover:bg-slate-200"
             >
-              <X size={18} />
+              <X size={17} />
             </button>
 
             <div className="pr-10">
               <p
-                className="text-xs font-bold uppercase tracking-[0.2em]"
+                className="text-[11px] font-bold uppercase tracking-[0.18em]"
                 style={{ color: BRAND_GOLD_DARK }}
               >
                 {checkoutMode === "buy_now" ? "Buy Now" : "Book Table"}
               </p>
 
-              <h2 className="mt-2 text-2xl font-bold text-slate-950">
+              <h2 className="mt-2 text-xl font-bold text-slate-950">
                 Complete your details
               </h2>
 
@@ -809,9 +815,9 @@ export default function Restaurant() {
               </div>
             )}
 
-            <div className="mt-5 grid gap-4 md:grid-cols-2">
+            <div className="mt-4 grid gap-3 md:grid-cols-2">
               <InputField
-                icon={<User size={16} />}
+                icon={<User size={15} />}
                 name="fullName"
                 value={customer.fullName}
                 onChange={handleCustomerChange}
@@ -819,7 +825,7 @@ export default function Restaurant() {
               />
 
               <InputField
-                icon={<Phone size={16} />}
+                icon={<Phone size={15} />}
                 name="phone"
                 value={customer.phone}
                 onChange={handleCustomerChange}
@@ -827,7 +833,7 @@ export default function Restaurant() {
               />
 
               <InputField
-                icon={<Mail size={16} />}
+                icon={<Mail size={15} />}
                 type="email"
                 name="email"
                 value={customer.email}
@@ -907,18 +913,18 @@ export default function Restaurant() {
               />
             </div>
 
-            <div className="mt-5 rounded-2xl bg-slate-50 p-4">
+            <div className="mt-4 rounded-2xl bg-slate-50 p-3">
               <div className="flex items-center justify-between text-sm text-slate-600">
                 <span>{cart.length} item line(s)</span>
                 <span className="font-bold text-slate-950">{money(total)}</span>
               </div>
             </div>
 
-            <div className="mt-5 flex flex-col gap-3 sm:flex-row">
+            <div className="mt-4 flex flex-col gap-3 sm:flex-row">
               <button
                 type="button"
                 onClick={() => setCheckoutMode(null)}
-                className="inline-flex flex-1 items-center justify-center rounded-2xl border border-slate-200 px-5 py-3 text-sm font-bold text-slate-700 transition hover:bg-slate-50"
+                className="inline-flex flex-1 items-center justify-center rounded-xl border border-slate-200 px-5 py-3 text-sm font-bold text-slate-700 transition hover:bg-slate-50"
               >
                 Cancel
               </button>
@@ -927,7 +933,7 @@ export default function Restaurant() {
                 type="button"
                 onClick={createBooking}
                 disabled={bookingLoading}
-                className="inline-flex flex-1 items-center justify-center gap-2 rounded-2xl px-5 py-3 text-sm font-bold text-white transition disabled:cursor-not-allowed disabled:opacity-70"
+                className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-bold text-white transition disabled:cursor-not-allowed disabled:opacity-70"
                 style={{ backgroundColor: BRAND_GOLD }}
               >
                 {bookingLoading ? "Processing..." : "Confirm"}
@@ -950,7 +956,7 @@ function InputField({
   min,
 }) {
   return (
-    <div className="flex h-12 items-center rounded-xl border border-slate-200 bg-white px-3">
+    <div className="flex h-11 items-center rounded-xl border border-slate-200 bg-white px-3">
       {icon && <span className="text-slate-400">{icon}</span>}
 
       <input
@@ -960,7 +966,9 @@ function InputField({
         value={value}
         onChange={onChange}
         placeholder={placeholder}
-        className={`${icon ? "ml-3" : ""} w-full border-none bg-transparent text-sm outline-none placeholder:text-slate-400`}
+        className={`${
+          icon ? "ml-3" : ""
+        } w-full border-none bg-transparent text-sm outline-none placeholder:text-slate-400`}
       />
     </div>
   );
