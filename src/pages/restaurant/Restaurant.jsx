@@ -817,8 +817,8 @@ export default function Restaurant() {
 
       {/* CHECKOUT MODAL */}
       {checkoutMode && (
-        <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/60 px-4 py-5">
-          <div className="relative max-h-[86vh] w-full max-w-[540px] overflow-y-auto rounded-[20px] bg-white p-4 shadow-2xl md:p-5">
+        <div className="fixed inset-0 z-[99999] flex items-start justify-center bg-black/60 px-3 pb-5 pt-[118px] sm:pt-[125px] md:pt-[135px] lg:pt-[145px]">
+          <div className="relative max-h-[calc(100vh-140px)] w-full max-w-[510px] overflow-y-auto overscroll-contain rounded-[20px] bg-white p-4 shadow-2xl sm:max-h-[calc(100vh-150px)] md:max-h-[calc(100vh-165px)]">
             <button
               type="button"
               onClick={() => setCheckoutMode(null)}
