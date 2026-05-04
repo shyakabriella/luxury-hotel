@@ -48,6 +48,10 @@ function buildImageUrl(path, apiBaseUrl) {
   return `${apiRootUrl}/storage/${path}`;
 }
 
+function isValidEmail(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
 export default function Restaurant() {
   const API_BASE_URL =
     import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000/api";
@@ -249,13 +253,27 @@ export default function Restaurant() {
       setBookingError("");
       setBookingSuccess(null);
 
+      const fullName = customer.fullName.trim();
+      const phone = customer.phone.trim();
+      const email = customer.email.trim();
+
       if (!checkoutMode) {
         setBookingError("Please choose Buy Now or Book Table.");
         return;
       }
 
-      if (!customer.fullName || !customer.phone) {
+      if (!fullName || !phone) {
         setBookingError("Please fill in your full name and phone number.");
+        return;
+      }
+
+      if (!email) {
+        setBookingError("Please enter your email address to receive confirmation.");
+        return;
+      }
+
+      if (!isValidEmail(email)) {
+        setBookingError("Please enter a valid email address.");
         return;
       }
 
@@ -270,6 +288,11 @@ export default function Restaurant() {
           );
           return;
         }
+
+        if (Number(customer.partySize) < 1) {
+          setBookingError("Party size must be at least 1 person.");
+          return;
+        }
       }
 
       if (cart.length === 0) {
@@ -280,16 +303,16 @@ export default function Restaurant() {
       setBookingLoading(true);
 
       const payload = {
-        customer_name: customer.fullName,
-        phone: customer.phone,
-        email: customer.email || null,
+        customer_name: fullName,
+        phone,
+        email,
         booking_type: checkoutMode,
         payment_method: paymentMethod,
         booking_date: customer.bookingDate || null,
         booking_time: customer.bookingTime || null,
         party_size: customer.partySize ? Number(customer.partySize) : null,
-        custom_dish: customer.customDish || null,
-        notes: customer.notes || null,
+        custom_dish: customer.customDish.trim() || null,
+        notes: customer.notes.trim() || null,
         items: cart.map((item) => ({
           restaurant_menu_item_id: item.id,
           item_name: item.name,
@@ -324,9 +347,10 @@ export default function Restaurant() {
         message:
           result?.message ||
           (checkoutMode === "buy_now"
-            ? "Order created successfully."
-            : "Table booking created successfully."),
+            ? "Order created successfully. Confirmation email has been sent."
+            : "Table booking created successfully. Confirmation email has been sent."),
         bookingCode: result?.data?.booking_code || "",
+        emailSent: result?.email_sent ?? true,
       });
 
       setCheckoutMode(null);
@@ -587,6 +611,13 @@ export default function Restaurant() {
                         </span>
                       </p>
                     ) : null}
+
+                    {bookingSuccess.emailSent === false ? (
+                      <p className="mt-1 text-orange-700">
+                        Booking saved, but email was not sent. Please check mail
+                        configuration.
+                      </p>
+                    ) : null}
                   </div>
                 )}
 
@@ -812,6 +843,10 @@ export default function Restaurant() {
                 Your order total is{" "}
                 <span className="font-bold text-sky-700">{money(total)}</span>
               </p>
+
+              <p className="mt-1 text-xs text-slate-500">
+                A confirmation email will be sent to the email address you enter.
+              </p>
             </div>
 
             {bookingError && (
@@ -827,6 +862,7 @@ export default function Restaurant() {
                 value={customer.fullName}
                 onChange={handleCustomerChange}
                 placeholder="Full name"
+                required
               />
 
               <InputField
@@ -835,6 +871,7 @@ export default function Restaurant() {
                 value={customer.phone}
                 onChange={handleCustomerChange}
                 placeholder="Phone number"
+                required
               />
 
               <InputField
@@ -843,7 +880,8 @@ export default function Restaurant() {
                 name="email"
                 value={customer.email}
                 onChange={handleCustomerChange}
-                placeholder="Email optional"
+                placeholder="Email address"
+                required
               />
 
               <div className="rounded-xl border border-[#e5d7bd] bg-[#faf7f0] px-3 py-3">
@@ -888,6 +926,7 @@ export default function Restaurant() {
                     name="bookingDate"
                     value={customer.bookingDate}
                     onChange={handleCustomerChange}
+                    required
                   />
 
                   <InputField
@@ -895,6 +934,7 @@ export default function Restaurant() {
                     name="bookingTime"
                     value={customer.bookingTime}
                     onChange={handleCustomerChange}
+                    required
                   />
 
                   <InputField
@@ -904,6 +944,7 @@ export default function Restaurant() {
                     value={customer.partySize}
                     onChange={handleCustomerChange}
                     placeholder="Party size"
+                    required
                   />
                 </>
               )}
@@ -959,6 +1000,7 @@ function InputField({
   onChange,
   placeholder,
   min,
+  required = false,
 }) {
   return (
     <div className="flex h-11 items-center rounded-xl border border-[#e5d7bd] bg-white px-3">
@@ -971,6 +1013,16 @@ function InputField({
         value={value}
         onChange={onChange}
         placeholder={placeholder}
+        required={required}
+        autoComplete={
+          name === "email"
+            ? "email"
+            : name === "phone"
+            ? "tel"
+            : name === "fullName"
+            ? "name"
+            : "off"
+        }
         className={`${
           icon ? "ml-3" : ""
         } w-full border-none bg-transparent text-sm outline-none placeholder:text-slate-400`}
