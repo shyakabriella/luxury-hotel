@@ -10,7 +10,7 @@ function MobileBottomBar() {
   };
 
   return (
-    <div className="fixed inset-x-0 bottom-0 z-[80] md:hidden">
+    <div className="fixed inset-x-0 bottom-0 z-[70] md:hidden">
       <div className="grid h-[68px] grid-cols-3 overflow-hidden border-t border-white/10 bg-[#183236] shadow-[0_-8px_20px_rgba(0,0,0,0.25)]">
         <button
           type="button"
@@ -18,12 +18,19 @@ function MobileBottomBar() {
           className="flex flex-col items-center justify-center border-r border-white/10 bg-white text-[#183236]"
         >
           <span className="mb-1 inline-flex">
-            <svg viewBox="0 0 24 24" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="2">
+            <svg
+              viewBox="0 0 24 24"
+              className="h-5 w-5"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
               <path d="M4 7h16" />
               <path d="M4 12h16" />
               <path d="M4 17h16" />
             </svg>
           </span>
+
           <span className="text-[11px] font-medium uppercase tracking-[0.14em]">
             Menu
           </span>
@@ -33,7 +40,21 @@ function MobileBottomBar() {
           href="tel:+250780443787"
           className="flex flex-col items-center justify-center border-r border-white/10 bg-white text-[#183236]"
         >
-          Call
+          <span className="mb-1 inline-flex">
+            <svg
+              viewBox="0 0 24 24"
+              className="h-5 w-5"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2A19.86 19.86 0 0 1 11.19 19a19.5 19.5 0 0 1-6-6A19.86 19.86 0 0 1 2.08 4.18 2 2 0 0 1 4.06 2h3a2 2 0 0 1 2 1.72c.13.95.35 1.88.66 2.76a2 2 0 0 1-.45 2.11L8 9.86a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.88.31 1.81.53 2.76.66A2 2 0 0 1 22 16.92z" />
+            </svg>
+          </span>
+
+          <span className="text-[11px] font-medium uppercase tracking-[0.14em]">
+            Call
+          </span>
         </a>
 
         <a
@@ -51,7 +72,7 @@ function SideContactTab() {
   return (
     <a
       href="https://direct-book.com/properties/luxurygardenpalace/contact?locale=en"
-      className="fixed left-0 top-1/2 z-[75] -translate-y-1/2 rounded-r-md border border-black/20 bg-white px-2 py-4 text-[#555] shadow-md transition hover:bg-[#f7f5f2]"
+      className="fixed left-0 top-1/2 z-[65] -translate-y-1/2 rounded-r-md border border-black/20 bg-white px-2 py-4 text-[#555] shadow-md transition hover:bg-[#f7f5f2]"
     >
       <span className="[writing-mode:vertical-rl] rotate-180 text-[12px] font-medium tracking-[0.08em] md:text-[13px]">
         Contact Us
@@ -62,22 +83,29 @@ function SideContactTab() {
 
 export default function Layouts() {
   const location = useLocation();
+
   const bannerPages = ["/", "/spa", "/wedding", "/restaurant", "/career"];
   const isBannerPage = bannerPages.includes(location.pathname);
 
   return (
-    <div className="min-h-screen bg-[#f3f2ed]">
-      <div className="relative z-[100]">
+    <div className="min-h-screen overflow-x-hidden bg-[#f3f2ed]">
+      {/* Header layer should be above page content, but below big modals */}
+      <div className="relative z-[90]">
         <TopNav />
         <Header />
       </div>
 
       <SideContactTab />
 
+      {/* 
+        Important:
+        Do not use z-0 here.
+        z-0 creates a stacking context and can make modals inside Outlet stay under Header.
+      */}
       <main
-        className={`relative z-0 ${
+        className={`relative ${
           isBannerPage ? "pt-[56px] md:pt-[76px]" : "pt-[206px] md:pt-[172px]"
-        } pb-[74px] md:pb-0`}
+        } pb-[86px] md:pb-0`}
       >
         <Outlet />
       </main>
