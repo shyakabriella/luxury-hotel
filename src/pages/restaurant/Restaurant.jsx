@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { createPortal } from "react-dom";
 import {
   CalendarDays,
   Mail,
@@ -137,6 +138,18 @@ export default function Restaurant() {
     return () => controller.abort();
   }, [API_BASE_URL, activeTab]);
 
+  useEffect(() => {
+    if (checkoutMode || selectedItem) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [checkoutMode, selectedItem]);
+
   const categories = useMemo(() => {
     const unique = [
       ...new Set(menuItems.map((item) => item.category).filter(Boolean)),
@@ -268,7 +281,9 @@ export default function Restaurant() {
       }
 
       if (!email) {
-        setBookingError("Please enter your email address to receive confirmation.");
+        setBookingError(
+          "Please enter your email address to receive confirmation."
+        );
         return;
       }
 
@@ -369,7 +384,6 @@ export default function Restaurant() {
       className="min-h-screen bg-gradient-to-b from-[#050505] via-[#f7f1e6] to-[#f7f1e6] pt-[95px] md:pt-[110px]"
       style={{ fontFamily: "Montserrat, sans-serif" }}
     >
-      {/* CLEAN PAGE HEADER */}
       <div className="mx-auto max-w-[1300px] px-4 md:px-6 lg:px-8">
         <div className="mb-4 rounded-[18px] border border-[#e5d7bd] bg-white px-4 py-4 shadow-sm md:px-6">
           <div className="flex items-start gap-3">
@@ -402,9 +416,7 @@ export default function Restaurant() {
 
       <div className="mx-auto max-w-[1300px] px-4 pb-6 md:px-6 lg:px-8">
         <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_330px] 2xl:grid-cols-[minmax(0,1fr)_350px]">
-          {/* LEFT SIDE */}
           <div className="space-y-4">
-            {/* TOP TAB AREA */}
             <div className="rounded-[18px] border border-[#e5d7bd] bg-white p-3 shadow-sm">
               <div className="flex flex-col items-center justify-center gap-3">
                 <div className="flex flex-wrap items-center justify-center gap-2">
@@ -465,7 +477,6 @@ export default function Restaurant() {
               </div>
             </div>
 
-            {/* CUSTOM DISH */}
             <div className="rounded-[18px] border border-[#e5d7bd] bg-white shadow-sm">
               <button
                 type="button"
@@ -489,7 +500,6 @@ export default function Restaurant() {
               )}
             </div>
 
-            {/* MENU ITEMS */}
             {loadingMenu ? (
               <div className="rounded-2xl bg-white p-8 text-center text-slate-500 shadow-sm">
                 Loading menu items...
@@ -587,7 +597,6 @@ export default function Restaurant() {
             )}
           </div>
 
-          {/* RIGHT SIDE ORDER PANEL */}
           <aside className="xl:sticky xl:top-24 xl:self-start">
             <div className="rounded-[18px] border border-[#e5d7bd] bg-white shadow-sm">
               <div className="flex items-center gap-3 border-b border-[#e5d7bd] px-4 py-3">
@@ -734,99 +743,153 @@ export default function Restaurant() {
         </div>
       </div>
 
-      {/* ITEM DETAILS POPUP */}
-      {selectedItem && (
-        <div className="fixed inset-0 z-[999] flex items-center justify-center bg-black/60 px-3 py-3">
-          <div className="relative w-full max-w-[92vw] overflow-hidden rounded-[16px] bg-white shadow-2xl sm:max-w-[500px] md:max-w-[560px] lg:max-w-[600px]">
-            <button
-              type="button"
-              onClick={() => setSelectedItem(null)}
-              className="absolute right-2 top-2 z-20 flex h-7 w-7 items-center justify-center rounded-full bg-white/95 text-slate-700 shadow-md transition hover:bg-white"
-            >
-              <X size={15} />
-            </button>
+      {selectedItem &&
+        createPortal(
+          <ItemDetailsModal
+            selectedItem={selectedItem}
+            activeTab={activeTab}
+            getItemQty={getItemQty}
+            handleBuyFromPopup={handleBuyFromPopup}
+            onClose={() => setSelectedItem(null)}
+          />,
+          document.body
+        )}
 
-            <div className="grid max-h-[82vh] overflow-y-auto md:grid-cols-[0.9fr_1fr]">
-              <div className="relative h-[150px] overflow-hidden bg-slate-100 sm:h-[175px] md:h-auto md:min-h-[250px]">
-                <img
-                  src={selectedItem.image}
-                  alt={selectedItem.name}
-                  className="h-full w-full object-cover"
-                  onError={(event) => {
-                    event.currentTarget.src = fallbackImage;
-                  }}
-                />
+      {checkoutMode &&
+        createPortal(
+          <CheckoutModal
+            checkoutMode={checkoutMode}
+            customer={customer}
+            paymentMethod={paymentMethod}
+            setPaymentMethod={setPaymentMethod}
+            handleCustomerChange={handleCustomerChange}
+            bookingError={bookingError}
+            bookingLoading={bookingLoading}
+            cart={cart}
+            total={total}
+            createBooking={createBooking}
+            onClose={() => setCheckoutMode(null)}
+          />,
+          document.body
+        )}
+    </section>
+  );
+}
 
-                <div className="absolute left-2 top-2 rounded-full bg-white/90 px-2.5 py-1 text-[9px] font-bold text-slate-700 shadow">
-                  {selectedItem.category || activeTab}
-                </div>
-              </div>
+function ItemDetailsModal({
+  selectedItem,
+  activeTab,
+  getItemQty,
+  handleBuyFromPopup,
+  onClose,
+}) {
+  return (
+    <div className="fixed inset-0 z-[2147483000] flex items-center justify-center bg-black/60 px-3 py-3">
+      <div className="relative w-full max-w-[92vw] overflow-hidden rounded-[16px] bg-white shadow-2xl sm:max-w-[500px] md:max-w-[560px] lg:max-w-[600px]">
+        <button
+          type="button"
+          onClick={onClose}
+          className="absolute right-2 top-2 z-20 flex h-7 w-7 items-center justify-center rounded-full bg-white/95 text-slate-700 shadow-md transition hover:bg-white"
+        >
+          <X size={15} />
+        </button>
 
-              <div className="flex flex-col justify-center p-4">
-                <p
-                  className="text-[9px] font-bold uppercase tracking-[0.16em]"
-                  style={{ color: BRAND_GOLD_DARK }}
-                >
-                  Menu Item
-                </p>
+        <div className="grid max-h-[82vh] overflow-y-auto md:grid-cols-[0.9fr_1fr]">
+          <div className="relative h-[150px] overflow-hidden bg-slate-100 sm:h-[175px] md:h-auto md:min-h-[250px]">
+            <img
+              src={selectedItem.image}
+              alt={selectedItem.name}
+              className="h-full w-full object-cover"
+              onError={(event) => {
+                event.currentTarget.src = fallbackImage;
+              }}
+            />
 
-                <h2 className="mt-1.5 text-[19px] font-bold leading-tight text-slate-950 sm:text-[21px]">
-                  {selectedItem.name}
-                </h2>
-
-                <p className="mt-1.5 text-[15px] font-bold text-slate-900 sm:text-[16px]">
-                  {money(selectedItem.price)}
-                </p>
-
-                {selectedItem.description && (
-                  <p className="mt-3 text-[12px] leading-5 text-slate-600">
-                    {selectedItem.description}
-                  </p>
-                )}
-
-                <div className="mt-4 grid grid-cols-2 gap-2">
-                  <button
-                    type="button"
-                    onClick={handleBuyFromPopup}
-                    className="inline-flex items-center justify-center gap-1.5 rounded-lg px-3 py-2.5 text-[11px] font-bold text-white transition hover:opacity-90"
-                    style={{ backgroundColor: BRAND_GOLD }}
-                  >
-                    <ShoppingCart size={13} />
-                    Add
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => setSelectedItem(null)}
-                    className="inline-flex items-center justify-center rounded-lg border border-[#e5d7bd] px-3 py-2.5 text-[11px] font-bold text-slate-700 transition hover:bg-slate-50"
-                  >
-                    Continue
-                  </button>
-                </div>
-
-                {getItemQty(selectedItem.id) > 0 && (
-                  <div className="mt-3 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-[11px] font-semibold text-emerald-700">
-                    Already in order: {getItemQty(selectedItem.id)}
-                  </div>
-                )}
-              </div>
+            <div className="absolute left-2 top-2 rounded-full bg-white/90 px-2.5 py-1 text-[9px] font-bold text-slate-700 shadow">
+              {selectedItem.category || activeTab}
             </div>
           </div>
-        </div>
-      )}
 
-      {/* CHECKOUT MODAL */}
-      {checkoutMode && (
-        <div className="fixed inset-0 z-[99999] flex items-start justify-center bg-black/60 px-3 pb-5 pt-[118px] sm:pt-[125px] md:pt-[135px] lg:pt-[145px]">
-          <div className="relative max-h-[calc(100vh-140px)] w-full max-w-[510px] overflow-y-auto overscroll-contain rounded-[20px] bg-white p-4 shadow-2xl sm:max-h-[calc(100vh-150px)] md:max-h-[calc(100vh-165px)]">
-            <button
-              type="button"
-              onClick={() => setCheckoutMode(null)}
-              className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-slate-600 transition hover:bg-slate-200"
+          <div className="flex flex-col justify-center p-4">
+            <p
+              className="text-[9px] font-bold uppercase tracking-[0.16em]"
+              style={{ color: BRAND_GOLD_DARK }}
             >
-              <X size={17} />
-            </button>
+              Menu Item
+            </p>
 
+            <h2 className="mt-1.5 text-[19px] font-bold leading-tight text-slate-950 sm:text-[21px]">
+              {selectedItem.name}
+            </h2>
+
+            <p className="mt-1.5 text-[15px] font-bold text-slate-900 sm:text-[16px]">
+              {money(selectedItem.price)}
+            </p>
+
+            {selectedItem.description && (
+              <p className="mt-3 text-[12px] leading-5 text-slate-600">
+                {selectedItem.description}
+              </p>
+            )}
+
+            <div className="mt-4 grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                onClick={handleBuyFromPopup}
+                className="inline-flex items-center justify-center gap-1.5 rounded-lg px-3 py-2.5 text-[11px] font-bold text-white transition hover:opacity-90"
+                style={{ backgroundColor: BRAND_GOLD }}
+              >
+                <ShoppingCart size={13} />
+                Add
+              </button>
+
+              <button
+                type="button"
+                onClick={onClose}
+                className="inline-flex items-center justify-center rounded-lg border border-[#e5d7bd] px-3 py-2.5 text-[11px] font-bold text-slate-700 transition hover:bg-slate-50"
+              >
+                Continue
+              </button>
+            </div>
+
+            {getItemQty(selectedItem.id) > 0 && (
+              <div className="mt-3 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-[11px] font-semibold text-emerald-700">
+                Already in order: {getItemQty(selectedItem.id)}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function CheckoutModal({
+  checkoutMode,
+  customer,
+  paymentMethod,
+  setPaymentMethod,
+  handleCustomerChange,
+  bookingError,
+  bookingLoading,
+  cart,
+  total,
+  createBooking,
+  onClose,
+}) {
+  return (
+    <div className="fixed inset-0 z-[2147483000] bg-black/60">
+      <div className="flex min-h-screen items-start justify-center px-3 pb-6 pt-[170px] sm:px-4 md:pt-[180px] lg:pt-[185px]">
+        <div className="relative w-full max-w-[540px] rounded-[20px] bg-white p-4 shadow-2xl md:p-5">
+          <button
+            type="button"
+            onClick={onClose}
+            className="absolute right-3 top-3 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-slate-600 transition hover:bg-slate-200"
+          >
+            <X size={17} />
+          </button>
+
+          <div className="max-h-[calc(100vh-220px)] overflow-y-auto pr-1">
             <div className="pr-10">
               <p
                 className="text-[11px] font-bold uppercase tracking-[0.18em]"
@@ -842,10 +905,6 @@ export default function Restaurant() {
               <p className="mt-1 text-sm text-slate-500">
                 Your order total is{" "}
                 <span className="font-bold text-sky-700">{money(total)}</span>
-              </p>
-
-              <p className="mt-1 text-xs text-slate-500">
-                A confirmation email will be sent to the email address you enter.
               </p>
             </div>
 
@@ -880,7 +939,7 @@ export default function Restaurant() {
                 name="email"
                 value={customer.email}
                 onChange={handleCustomerChange}
-                placeholder="Email address"
+                placeholder="Email optional"
                 required
               />
 
@@ -969,7 +1028,7 @@ export default function Restaurant() {
             <div className="mt-4 flex flex-col gap-3 sm:flex-row">
               <button
                 type="button"
-                onClick={() => setCheckoutMode(null)}
+                onClick={onClose}
                 className="inline-flex flex-1 items-center justify-center rounded-xl border border-[#e5d7bd] px-5 py-3 text-sm font-bold text-slate-700 transition hover:bg-slate-50"
               >
                 Cancel
@@ -987,8 +1046,8 @@ export default function Restaurant() {
             </div>
           </div>
         </div>
-      )}
-    </section>
+      </div>
+    </div>
   );
 }
 
