@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import TopNav from "./TopNav";
 import Header from "./Header";
@@ -17,14 +17,16 @@ function ScrollToTop() {
   return null;
 }
 
-function MobileBottomBar() {
+function MobileBottomBar({ modalOpen }) {
   const handleOpenMenu = () => {
     window.dispatchEvent(new CustomEvent("open-mobile-bottom-menu"));
   };
 
+  if (modalOpen) return null;
+
   return (
-    <div className="fixed inset-x-0 bottom-0 z-[90] md:hidden">
-      <div className="grid h-[68px] grid-cols-3 overflow-hidden border-t border-white/10 bg-[#183236] shadow-[0_-8px_24px_rgba(0,0,0,0.28)]">
+    <div className="fixed inset-x-0 bottom-0 z-[80] md:hidden">
+      <div className="grid h-[68px] grid-cols-3 overflow-hidden border-t border-white/10 bg-[#183236] shadow-[0_-8px_20px_rgba(0,0,0,0.25)]">
         <button
           type="button"
           onClick={handleOpenMenu}
@@ -98,11 +100,13 @@ function MobileBottomBar() {
   );
 }
 
-function SideContactTab() {
+function SideContactTab({ modalOpen }) {
+  if (modalOpen) return null;
+
   return (
     <a
       href="https://direct-book.com/properties/luxurygardenpalace/contact?locale=en"
-      className="fixed left-0 top-1/2 z-[70] hidden -translate-y-1/2 rounded-r-md border border-black/20 bg-white px-2 py-4 text-[#555] shadow-md transition hover:bg-[#f7f5f2] sm:flex"
+      className="fixed left-0 top-1/2 z-[75] hidden -translate-y-1/2 rounded-r-md border border-black/20 bg-white px-2 py-4 text-[#555] shadow-md transition hover:bg-[#f7f5f2] sm:flex"
     >
       <span className="[writing-mode:vertical-rl] rotate-180 text-[12px] font-medium tracking-[0.08em] md:text-[13px]">
         Contact Us
@@ -113,25 +117,52 @@ function SideContactTab() {
 
 export default function Layouts() {
   const location = useLocation();
+  const [modalOpen, setModalOpen] = useState(false);
 
   const cleanPath = location.pathname.replace(/\/+$/, "") || "/";
 
   const bannerPages = ["/", "/spa", "/wedding", "/restaurant", "/career"];
   const isBannerPage = bannerPages.includes(cleanPath);
 
+  useEffect(() => {
+    const openModal = () => {
+      setModalOpen(true);
+      document.body.style.overflow = "hidden";
+    };
+
+    const closeModal = () => {
+      setModalOpen(false);
+      document.body.style.overflow = "";
+    };
+
+    window.addEventListener("luxury-modal-open", openModal);
+    window.addEventListener("luxury-modal-close", closeModal);
+
+    return () => {
+      window.removeEventListener("luxury-modal-open", openModal);
+      window.removeEventListener("luxury-modal-close", closeModal);
+      document.body.style.overflow = "";
+    };
+  }, []);
+
+  useEffect(() => {
+    setModalOpen(false);
+    document.body.style.overflow = "";
+  }, [location.pathname]);
+
   return (
     <div className="min-h-screen overflow-x-hidden bg-[#f3f2ed]">
       <ScrollToTop />
 
-      {/* Keep header below portal modals */}
-      <div className="relative z-[85]">
-        <TopNav />
-        <Header />
-      </div>
+      {!modalOpen && (
+        <div className="relative z-[60]">
+          <TopNav />
+          <Header />
+        </div>
+      )}
 
-      <SideContactTab />
+      <SideContactTab modalOpen={modalOpen} />
 
-      {/* Important: no z-0 here */}
       <main
         className={`relative ${
           isBannerPage ? "pt-[56px] md:pt-[76px]" : "pt-[206px] md:pt-[172px]"
@@ -140,9 +171,9 @@ export default function Layouts() {
         <Outlet />
       </main>
 
-      <Footer />
+      {!modalOpen && <Footer />}
 
-      <MobileBottomBar />
+      <MobileBottomBar modalOpen={modalOpen} />
     </div>
   );
 }

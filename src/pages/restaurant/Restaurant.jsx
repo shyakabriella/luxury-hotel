@@ -140,12 +140,15 @@ export default function Restaurant() {
 
   useEffect(() => {
     if (checkoutMode || selectedItem) {
+      window.dispatchEvent(new CustomEvent("luxury-modal-open"));
       document.body.style.overflow = "hidden";
     } else {
+      window.dispatchEvent(new CustomEvent("luxury-modal-close"));
       document.body.style.overflow = "";
     }
 
     return () => {
+      window.dispatchEvent(new CustomEvent("luxury-modal-close"));
       document.body.style.overflow = "";
     };
   }, [checkoutMode, selectedItem]);
@@ -784,8 +787,15 @@ function ItemDetailsModal({
   onClose,
 }) {
   return (
-    <div className="fixed inset-0 z-[2147483000] flex items-center justify-center bg-black/60 px-3 py-3">
-      <div className="relative w-full max-w-[92vw] overflow-hidden rounded-[16px] bg-white shadow-2xl sm:max-w-[500px] md:max-w-[560px] lg:max-w-[600px]">
+    <div
+      className="fixed inset-0 flex items-center justify-center bg-black/60 px-3 py-3"
+      style={{ zIndex: 2147483647 }}
+      onMouseDown={onClose}
+    >
+      <div
+        className="relative w-full max-w-[92vw] overflow-hidden rounded-[16px] bg-white shadow-2xl sm:max-w-[500px] md:max-w-[560px] lg:max-w-[600px]"
+        onMouseDown={(event) => event.stopPropagation()}
+      >
         <button
           type="button"
           onClick={onClose}
@@ -878,173 +888,174 @@ function CheckoutModal({
   onClose,
 }) {
   return (
-    <div className="fixed inset-0 z-[2147483000] bg-black/60">
-      <div className="flex min-h-screen items-start justify-center px-3 pb-6 pt-[170px] sm:px-4 md:pt-[180px] lg:pt-[185px]">
-        <div className="relative w-full max-w-[540px] rounded-[20px] bg-white p-4 shadow-2xl md:p-5">
+    <div
+      className="fixed inset-0 flex items-center justify-center bg-black/60 px-4 py-6"
+      style={{ zIndex: 2147483647 }}
+      onMouseDown={onClose}
+    >
+      <div
+        className="relative max-h-[90vh] w-full max-w-[540px] overflow-y-auto rounded-[20px] bg-white p-4 shadow-2xl md:p-5"
+        onMouseDown={(event) => event.stopPropagation()}
+      >
+        <button
+          type="button"
+          onClick={onClose}
+          className="absolute right-3 top-3 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-slate-600 transition hover:bg-slate-200"
+        >
+          <X size={17} />
+        </button>
+
+        <div className="pr-10">
+          <p
+            className="text-[11px] font-bold uppercase tracking-[0.18em]"
+            style={{ color: BRAND_GOLD_DARK }}
+          >
+            {checkoutMode === "buy_now" ? "Buy Now" : "Book Table"}
+          </p>
+
+          <h2 className="mt-2 text-xl font-bold text-slate-950">
+            Complete your details
+          </h2>
+
+          <p className="mt-1 text-sm text-slate-500">
+            Your order total is{" "}
+            <span className="font-bold text-sky-700">{money(total)}</span>
+          </p>
+        </div>
+
+        {bookingError && (
+          <div className="mt-4 rounded-xl border border-red-200 bg-red-50 p-3 text-sm font-semibold text-red-700">
+            {bookingError}
+          </div>
+        )}
+
+        <div className="mt-4 grid gap-3 md:grid-cols-2">
+          <InputField
+            icon={<User size={15} />}
+            name="fullName"
+            value={customer.fullName}
+            onChange={handleCustomerChange}
+            placeholder="Full name"
+            required
+          />
+
+          <InputField
+            icon={<Phone size={15} />}
+            name="phone"
+            value={customer.phone}
+            onChange={handleCustomerChange}
+            placeholder="Phone number"
+            required
+          />
+
+          <InputField
+            icon={<Mail size={15} />}
+            type="email"
+            name="email"
+            value={customer.email}
+            onChange={handleCustomerChange}
+            placeholder="Email address"
+            required
+          />
+
+          <div className="rounded-xl border border-[#e5d7bd] bg-[#faf7f0] px-3 py-3">
+            <p className="mb-2 text-sm font-bold text-slate-800">Payment</p>
+
+            <div className="space-y-2 text-sm text-slate-700">
+              <label className="flex items-center gap-2">
+                <input
+                  type="radio"
+                  checked={paymentMethod === "counter"}
+                  onChange={() => setPaymentMethod("counter")}
+                />
+                Pay at counter
+              </label>
+
+              <label className="flex items-center gap-2">
+                <input
+                  type="radio"
+                  checked={paymentMethod === "room"}
+                  onChange={() => setPaymentMethod("room")}
+                />
+                Charge to room
+              </label>
+
+              <label className="flex items-center gap-2">
+                <input
+                  type="radio"
+                  checked={paymentMethod === "card"}
+                  onChange={() => setPaymentMethod("card")}
+                />
+                Pay now
+              </label>
+            </div>
+          </div>
+
+          {checkoutMode === "table" && (
+            <>
+              <InputField
+                type="date"
+                name="bookingDate"
+                value={customer.bookingDate}
+                onChange={handleCustomerChange}
+                required
+              />
+
+              <InputField
+                type="time"
+                name="bookingTime"
+                value={customer.bookingTime}
+                onChange={handleCustomerChange}
+                required
+              />
+
+              <InputField
+                type="number"
+                min="1"
+                name="partySize"
+                value={customer.partySize}
+                onChange={handleCustomerChange}
+                placeholder="Party size"
+                required
+              />
+            </>
+          )}
+
+          <textarea
+            name="notes"
+            value={customer.notes}
+            onChange={handleCustomerChange}
+            rows={3}
+            placeholder="Notes optional"
+            className="rounded-xl border border-[#e5d7bd] bg-white px-4 py-3 text-sm outline-none md:col-span-2"
+          />
+        </div>
+
+        <div className="mt-4 rounded-xl bg-[#faf7f0] p-3">
+          <div className="flex items-center justify-between text-sm text-slate-600">
+            <span>{cart.length} item line(s)</span>
+            <span className="font-bold text-slate-950">{money(total)}</span>
+          </div>
+        </div>
+
+        <div className="mt-4 flex flex-col gap-3 sm:flex-row">
           <button
             type="button"
             onClick={onClose}
-            className="absolute right-3 top-3 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-slate-600 transition hover:bg-slate-200"
+            className="inline-flex flex-1 items-center justify-center rounded-xl border border-[#e5d7bd] px-5 py-3 text-sm font-bold text-slate-700 transition hover:bg-slate-50"
           >
-            <X size={17} />
+            Cancel
           </button>
 
-          <div className="max-h-[calc(100vh-220px)] overflow-y-auto pr-1">
-            <div className="pr-10">
-              <p
-                className="text-[11px] font-bold uppercase tracking-[0.18em]"
-                style={{ color: BRAND_GOLD_DARK }}
-              >
-                {checkoutMode === "buy_now" ? "Buy Now" : "Book Table"}
-              </p>
-
-              <h2 className="mt-2 text-xl font-bold text-slate-950">
-                Complete your details
-              </h2>
-
-              <p className="mt-1 text-sm text-slate-500">
-                Your order total is{" "}
-                <span className="font-bold text-sky-700">{money(total)}</span>
-              </p>
-            </div>
-
-            {bookingError && (
-              <div className="mt-4 rounded-xl border border-red-200 bg-red-50 p-3 text-sm font-semibold text-red-700">
-                {bookingError}
-              </div>
-            )}
-
-            <div className="mt-4 grid gap-3 md:grid-cols-2">
-              <InputField
-                icon={<User size={15} />}
-                name="fullName"
-                value={customer.fullName}
-                onChange={handleCustomerChange}
-                placeholder="Full name"
-                required
-              />
-
-              <InputField
-                icon={<Phone size={15} />}
-                name="phone"
-                value={customer.phone}
-                onChange={handleCustomerChange}
-                placeholder="Phone number"
-                required
-              />
-
-              <InputField
-                icon={<Mail size={15} />}
-                type="email"
-                name="email"
-                value={customer.email}
-                onChange={handleCustomerChange}
-                placeholder="Email optional"
-                required
-              />
-
-              <div className="rounded-xl border border-[#e5d7bd] bg-[#faf7f0] px-3 py-3">
-                <p className="mb-2 text-sm font-bold text-slate-800">
-                  Payment
-                </p>
-
-                <div className="space-y-2 text-sm text-slate-700">
-                  <label className="flex items-center gap-2">
-                    <input
-                      type="radio"
-                      checked={paymentMethod === "counter"}
-                      onChange={() => setPaymentMethod("counter")}
-                    />
-                    Pay at counter
-                  </label>
-
-                  <label className="flex items-center gap-2">
-                    <input
-                      type="radio"
-                      checked={paymentMethod === "room"}
-                      onChange={() => setPaymentMethod("room")}
-                    />
-                    Charge to room
-                  </label>
-
-                  <label className="flex items-center gap-2">
-                    <input
-                      type="radio"
-                      checked={paymentMethod === "card"}
-                      onChange={() => setPaymentMethod("card")}
-                    />
-                    Pay now
-                  </label>
-                </div>
-              </div>
-
-              {checkoutMode === "table" && (
-                <>
-                  <InputField
-                    type="date"
-                    name="bookingDate"
-                    value={customer.bookingDate}
-                    onChange={handleCustomerChange}
-                    required
-                  />
-
-                  <InputField
-                    type="time"
-                    name="bookingTime"
-                    value={customer.bookingTime}
-                    onChange={handleCustomerChange}
-                    required
-                  />
-
-                  <InputField
-                    type="number"
-                    min="1"
-                    name="partySize"
-                    value={customer.partySize}
-                    onChange={handleCustomerChange}
-                    placeholder="Party size"
-                    required
-                  />
-                </>
-              )}
-
-              <textarea
-                name="notes"
-                value={customer.notes}
-                onChange={handleCustomerChange}
-                rows={3}
-                placeholder="Notes optional"
-                className="rounded-xl border border-[#e5d7bd] bg-white px-4 py-3 text-sm outline-none md:col-span-2"
-              />
-            </div>
-
-            <div className="mt-4 rounded-xl bg-[#faf7f0] p-3">
-              <div className="flex items-center justify-between text-sm text-slate-600">
-                <span>{cart.length} item line(s)</span>
-                <span className="font-bold text-slate-950">{money(total)}</span>
-              </div>
-            </div>
-
-            <div className="mt-4 flex flex-col gap-3 sm:flex-row">
-              <button
-                type="button"
-                onClick={onClose}
-                className="inline-flex flex-1 items-center justify-center rounded-xl border border-[#e5d7bd] px-5 py-3 text-sm font-bold text-slate-700 transition hover:bg-slate-50"
-              >
-                Cancel
-              </button>
-
-              <button
-                type="button"
-                onClick={createBooking}
-                disabled={bookingLoading}
-                className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-bold text-white transition disabled:cursor-not-allowed disabled:opacity-70"
-                style={{ backgroundColor: BRAND_GOLD }}
-              >
-                {bookingLoading ? "Processing..." : "Confirm"}
-              </button>
-            </div>
-          </div>
+          <button
+            type="button"
+            onClick={createBooking}
+            disabled={bookingLoading}
+            className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-bold text-white transition disabled:cursor-not-allowed disabled:opacity-70"
+            style={{ backgroundColor: BRAND_GOLD }}
+          >
+            {bookingLoading ? "Processing..." : "Confirm"}
+          </button>
         </div>
       </div>
     </div>
